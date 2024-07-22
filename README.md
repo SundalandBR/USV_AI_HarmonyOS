@@ -1,6 +1,6 @@
 # USV_AI_HarmonyOS
 
-dev branch
+feature-text branch
 
 /docs 文档
 
