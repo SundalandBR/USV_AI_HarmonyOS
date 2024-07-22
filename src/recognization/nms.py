@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 def nms(pred, conf_thres, iou_thres):
     conf = pred[..., 4] > conf_thres
-    box = pred[conf == True]
+    box = pred[conf is True]
     cls_conf = box[..., 5:]
     cls = []
     for i in range(len(cls_conf)):
@@ -79,17 +79,15 @@ def draw(img, xscale, yscale, pred):
             img_ = cv2.rectangle(img, (detect[0], detect[1]), (detect[2], detect[3]), (0, 255, 0), 1)
     return img_, rect
 
-
-if __name__ == '__main__':
-    height, width = 640, 640
-    img0 = cv2.imread('D:\\Module_dataset\\coco8\\images\\val\\000000000049.jpg')
+def post_processing(onnx_model,img_path,height=640, width=640,):
+    img0 = cv2.imread(img_path)
     x_scale = img0.shape[1] / width
     y_scale = img0.shape[0] / height
     img = img0 / 255.
     img = cv2.resize(img, (width, height))
     img = np.transpose(img, (2, 0, 1))
     data = np.expand_dims(img, axis=0)
-    sess = rt.InferenceSession('yolov8n.onnx')
+    sess = rt.InferenceSession(onnx_model)
     input_name = sess.get_inputs()[0].name
     label_name = sess.get_outputs()[0].name
     pred = sess.run([label_name], {input_name: data.astype(np.float32)})[0]
@@ -102,7 +100,37 @@ if __name__ == '__main__':
     for result in results:
         print("rect", result[:4], "truth", result[4], "type", result[5])
     ret_img, rect = draw(img0, x_scale, y_scale, results)
-    print(rect)
+    return ret_img, rect
+
+
+if __name__ == '__main__':
+    # height, width = 640, 640
+    # img0 = cv2.imread('D:\\Module_dataset\\coco8\\images\\val\\000000000049.jpg')
+    # x_scale = img0.shape[1] / width
+    # y_scale = img0.shape[0] / height
+    # img = img0 / 255.
+    # img = cv2.resize(img, (width, height))
+    # img = np.transpose(img, (2, 0, 1))
+    # data = np.expand_dims(img, axis=0)
+    # sess = rt.InferenceSession('yolov8n.onnx')
+    # input_name = sess.get_inputs()[0].name
+    # label_name = sess.get_outputs()[0].name
+    # pred = sess.run([label_name], {input_name: data.astype(np.float32)})[0]
+    # pred = np.squeeze(pred)
+    # pred = np.transpose(pred, (1, 0))
+    # pred_class = pred[..., 4:]
+    # pred_conf = np.max(pred_class, axis=-1)
+    # pred = np.insert(pred, 4, pred_conf, axis=-1)
+    # results = nms(pred, 0.3, 0.45)
+    # for result in results:
+    #     print("rect", result[:4], "truth", result[4], "type", result[5])
+    # ret_img, rect = draw(img0, x_scale, y_scale, results)
+    # print(rect)
+    # ret_img = ret_img[:, :, ::-1]
+    # plt.imshow(ret_img)
+    # plt.show()
+    ret_img, rect = post_processing('../../resource/model/onnx/yolov8n.onnx',
+                                    "D://Module_dataset//coco8//images//val//000000000036.jpg")
     ret_img = ret_img[:, :, ::-1]
     plt.imshow(ret_img)
     plt.show()
