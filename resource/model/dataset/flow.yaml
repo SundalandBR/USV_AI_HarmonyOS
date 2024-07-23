@@ -18,5 +18,5 @@ test: # test images (optional)
 names:
   0: riverside
   1: obstacle
-
+  2: river
 wandb: False
