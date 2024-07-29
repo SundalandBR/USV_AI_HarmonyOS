@@ -9,6 +9,12 @@
       "tablet",
       "2in1"
     ],
+    "metadata": [
+      {
+        "name": "client_id",
+        "value": "111610403"
+      }
+    ],
     "deliveryWithInstall": true,
     "installationFree": false,
     "pages": "$profile:main_pages",
@@ -73,7 +79,7 @@
             "name": "ohos.extension.backup",
             "resource": "$profile:backup_config"
           }
-        ],
+        ]
       }
     ]
   }

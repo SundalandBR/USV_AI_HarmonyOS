@@ -8,7 +8,7 @@ let Port:number=8080;
 
 enum TABLE_ {
   mission_data = 1,
-  navigation_dara,
+  navigation_data,
   user_accounts,
   video_data,
   water_quality_data

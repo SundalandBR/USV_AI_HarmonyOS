@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "storePassword": "000000191F047D8762055BF20D9B324242CD12CDB35B805BFA196875C23E364B7610402EBC4507AF0D",
-          "certpath": "D:/harmonyKey/727.cer",
-          "keyAlias": "727",
-          "keyPassword": "0000001937D05A792838D56890355A4F81EEE5F504D8278929AD7197D33C157DE129BD491523DAE513",
-          "profile": "D:/harmonyKey/727Debug.p7b",
+          "storePassword": "000000196FE1422A106AC9CC50162AF0E0202A0748EA311453ACE7DAA14DFD65C3985428B728D1DBFF",
+          "certpath": "D:/harmonyKey/map.cer",
+          "keyAlias": "map",
+          "keyPassword": "00000019F44FC620BD8F49B8E0DA1B5D75BD4F33940CABEB051E937706B6ED91C7B27771DAD00CFCF7",
+          "profile": "D:/harmonyKey/mapDebug.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "D:/harmonyKey/727.p12"
+          "storeFile": "D:/harmonyKey/map.p12"
         }
       }
     ],

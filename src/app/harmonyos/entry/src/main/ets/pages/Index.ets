@@ -42,7 +42,10 @@ struct Index {
         .margin({top:100})
         .width('100%')
         .onClick(()=>{
-          router.pushUrl({url:'pages/UserPage'})
+          router.pushUrl({
+            url:'pages/UserPage',
+            params:this.user1
+          })
         })
         Line()
           .width('100%')
@@ -149,7 +152,8 @@ struct Index {
         .onClick(()=>{
           if(this.flag){
             router.pushUrl({
-              url:'pages/OptionPage'
+              url:'pages/OptionPage',
+              params:this.user1
             })
           }
         })

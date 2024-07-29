@@ -9,22 +9,31 @@ import { rcp } from '@kit.RemoteCommunicationKit';
 import { url } from '@kit.ArkTS';
 import { interfaceUser, Json_msg } from '../interfaces/InterfaceUser';
 import { InterfaceMission } from '../interfaces/InterfaceMission';
+import { Mission, Point, TABLE_, TAdd, TEdit, TGet } from '../utils/MysqlUtil';
 
 @Entry
 @Component
 struct OptionPage {
   @State items: string[] = [];
   @State taskFlag:boolean=false;//是否弹出任务框
-  @State taskPointFlag:boolean=true;//标点页面弹出
+  @State taskPointFlag:boolean=false;//标点页面弹出
   @State videoFlag:boolean=false;
   private mapController:map.MapComponentController=new map.MapComponentController()//地图控制器
   private longitude:number= 118.08683647036881
   private latitude:number= 24.579691167512674
   @State pointArr:map.Marker[]=[];//标点数组
-  private arr:ArrayList<map.Marker>|null=null;
+  @State pointArr1:Point[]=[];
   private polyLine:map.MapPolyline | null=null;
-  @State tasks:Tasks[]=[]
-
+  @State tasks:Mission[]=[]
+  @State markIndex:number=0
+  @State user2:interfaceUser= {
+    userId: 0,
+    username: '',
+    password: '',
+    phoneNumber:0,
+    devUuidList: '',
+    missionIdList: ''
+  };
   private tasksIndex:number=0
 
 
@@ -53,6 +62,11 @@ struct OptionPage {
   }
 
   aboutToAppear(): void {
+    try {
+      this.user2=router.getParams() as interfaceUser
+    }catch (e){
+      console.log("some err exist at aboutToAppear-MainPage")
+    }
     let context = getContext(this) as common.UIAbilityContext
     window.getLastWindow(context).then((lastWindow)=> {
       lastWindow.setPreferredOrientation(window.Orientation.LANDSCAPE)
@@ -131,29 +145,95 @@ struct OptionPage {
   }
 
   //创建任务
-  createTask(id:number,name:string,pointArr:map.Marker[]){
-
+  createTask(){
+    let index=this.tasks==null?0:this.tasks.length
+    let res=TAdd(TABLE_.mission_data,`${index}`,`${this.user2.userId}`,"2018-10-1,13:14:00")
+    res.then((result:boolean)=>{
+      console.log(result?'新建成功':"新建失败")
+    })
   }
 
   //获取任务列表
   getTaskList(){
-    let session=rcp.createSession();
-    let _url=url.URL.parseURL(`http://47.96.237.24:8080/poi/getTaskList`)
+    console.log('getTaskList()')
+    let res=TGet(TABLE_.mission_data,"user_id",`${this.user2.userId}`)
+    res.then((result:string)=>{
+      let tasks1=JSON.parse(result) as Mission[]
+      this.tasks=tasks1
+      tasks1.forEach((value:Mission,index:number)=>{
+        console.log(`任务${index+1},${value.missionId}`)
+      })
+    })
+    
 
-    session.post(_url).then((response)=>{
-      try {
-        let obj=response.toJSON() as Json_msg;
-        console.log(response.toString());
-        console.log("obj.code:"+obj.code)
-        console.log("obj.msg:"+obj.msg)
-        console.log("obj.Data:"+JSON.stringify(obj.Data))
-        let temp=JSON.stringify(obj.Data)
-        //let task=JSON.parse(temp) as InterfaceMission
-        this.tasks.push(JSON.parse(temp) as Tasks)
-        console.log(`${this.tasks}`)
-      }catch (err){
-        console.log(`json content:${JSON.stringify(err)}}`)
+  }
+
+  removeMarker(){
+    console.log('removeMarker()')
+    let session = rcp.createSession();
+    let IPAddress:string="47.96.237.24";
+    let Port:number=8080;
+    let _url = url.URL.parseURL
+      (`http://${IPAddress}:${Port}/poi/senior_get?tableindex=1&column=mission_id&value=${this.tasks[this.tasksIndex].missionId}`);
+    let obj:Json_msg= {
+      code: 0,
+      msg: '',
+      Data: ''
+    }
+    let mission:Mission= {
+      missionId: 0,
+      userId: 0,
+      createTime: '',
+      finishTime: '',
+      positionList: '',
+      status: 0,
+      priority: 0,
+      waterDataIdList: '',
+      navigationIdList: '',
+      description: '',
+      videoId: 0
+    }
+    session.get(_url).then((response) => {
+      obj=response.toJSON() as Json_msg;//将其解析为Json_msg
+      console.log(JSON.stringify(obj.Data));
+
+      let ms=JSON.parse(JSON.stringify(obj.Data)) as Mission[];
+
+      let ListString:string='';
+      ms.forEach((value:Mission)=>{
+        console.log(value.missionId.toString())
+        ListString=value.positionList
+      })
+      ListString="[{"+ListString+"}]"
+      while(ListString.search("_")!=-1){
+        ListString=ListString.replace("_","},{");
       }
+      console.log("ListString:"+(ListString))
+      let pl= JSON.parse(ListString) as Point[];
+      pl.forEach((value:Point)=>{
+        console.log(value.latitude+"   "+value.longitude)
+      })
+      let temp=0
+      for(let i=0;i<pl.length;i++){
+        if(i==this.markIndex){
+          temp=i
+          break;
+        }
+      }
+      for(let j=temp;j<pl.length;j++){
+        pl[j]=pl[j+1]
+      }
+      pl.length=pl.length-1
+      this.pointArr1=pl
+      pl.forEach((value:Point)=>{
+        console.log(value.latitude+"   "+value.longitude)
+      })
+    }).catch((err: BusinessError) => {
+      console.error(`err: err code is ${err.code}, err message is ${JSON.stringify(err)}`);
+    });
+    let res=TEdit(TABLE_.mission_data,this.tasks[this.tasksIndex].missionId,"position_list",`${this.pointArr1.toString()}`)
+    res.then((result)=>{
+      console.log(result?"操作成功":"操作失败")
     })
 
   }
@@ -175,7 +255,8 @@ struct OptionPage {
             .height(24)
             .onClick(()=>{
               router.pushUrl({
-                url:'pages/Index'
+                url:'pages/Index',
+                params:this.user2
               })
             })
           //摄像头
@@ -252,12 +333,12 @@ struct OptionPage {
         Column(){
           Row(){
             List(){
-              ForEach(this.tasks,(val:Tasks)=>{
+              ForEach(this.tasks,(val:Mission,index:number)=>{
                 ListItem(){
-                  Text(`${val.missionId}`)
+                  Text(`任务${index+1},${val.missionId}`)
                     .margin({top:5,left:5})
                     .onClick(()=>{
-                      this.tasksIndex=val.missionId
+                      this.tasksIndex=index+1
                       if(!this.taskPointFlag){
                         this.taskPointFlag=true
                         console.log('taskPointFlag:'+this.taskPointFlag)
@@ -275,7 +356,7 @@ struct OptionPage {
           }
           Row(){
             Button('+新建任务')
-              .onClick(()=>this.createTask(1,'任务2',this.pointArr))
+              .onClick(()=>this.createTask())
               .type(ButtonType.Normal)
               .backgroundColor('rgb(220,220,220)')
 
@@ -285,21 +366,21 @@ struct OptionPage {
         .width(150)
         .height(200)
         .position({x:120,y:100})
-        .visibility(this.taskFlag?Visibility.Visible:Visibility.None)
+        .visibility(this.taskFlag&&this.taskPointFlag?Visibility.Visible:Visibility.None)
 
         //任务标点列表窗口
         Column(){
           List(){
-            ForEach(this.pointArr,(val:map.Marker)=>{
+            ForEach(this.pointArr1,(val:Point,index:number)=>{
               ListItem(){
                 Row(){
-                  Text(`longitude:${val.getPosition().longitude},latitude:${val.getPosition().latitude}`)
-                    .margin({right:20})
+                  Text(`longitude:${val.longitude},latitude:${val.latitude}`)
                   Image($r('app.media.delete'))
                     .width(24)
                     .height(24)
                     .onClick(()=>{
-                      this.arr?.remove(val)
+                      this.markIndex=index
+                      this.removeMarker()
                     })
                 }
               }
