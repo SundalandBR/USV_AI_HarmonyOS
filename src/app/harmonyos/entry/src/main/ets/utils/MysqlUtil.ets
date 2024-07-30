@@ -140,16 +140,18 @@ async function TEdit(tableIndex:TABLE_,Id:number,column:string,value:string):Pro
     code: 0,
     msg: '',
     Data: ''
-  }
-  let _url = url.URL.parseURL(`http://${IPAddress}:${Port}/poi/senior_get?tableindex=${tableIndex}&column=${column}&value=${value}`);
+  }//senior_edit
+  let _url = url.URL.parseURL(`http://${IPAddress}:${Port}/poi/senior_edit?tableindex=${tableIndex}&id=${Id}&column=${column}&value=${value}`);
   session.post(_url).then((response)=>{
     obj=response.toJSON() as Json_msg;
+    console.log(JSON.stringify(obj))
+
   })
   const result:boolean=await new  Promise((resolve:Function)=>{
     setTimeout(()=>{
       resolve(obj.code==1)
     },1500)
   })
-  return false ;
+  return result ;
 }
 export{TGet,TAdd,TDelete,TEdit,WaterData,Point,Mission,IPAddress,Port,TABLE_}
