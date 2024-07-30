@@ -79,7 +79,7 @@ async  function TAdd(tableIndex:TABLE_, param1:string,param2:string,param3:strin
   const result: boolean = await new Promise((resolve: Function) => {
     setTimeout(() => {
       resolve(obj?.code==1)
-    }, 1000);
+    }, 2000);
   });
   return result;
 

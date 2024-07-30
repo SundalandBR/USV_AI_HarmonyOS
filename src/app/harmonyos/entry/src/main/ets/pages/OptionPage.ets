@@ -153,7 +153,7 @@ struct OptionPage {
   //创建任务
   createTask(){
     let index=this.tasks==null?0:this.tasks.length
-    let res=TAdd(TABLE_.mission_data,`${index}`,`${this.user2.userId}`,"2018-10-1,13:14:00")
+    let pointIndex=this.pointArr1==null?0:this.pointArr1.length
     try {
       systemDateTime.getCurrentTime(true, (error: BusinessError, time: number) => {
         if (error) {
@@ -166,6 +166,7 @@ struct OptionPage {
       let error = e as BusinessError;
       console.info(`Failed to get currentTime. message: ${error.message}, code: ${error.code}`);
     }
+    let res=TAdd(TABLE_.mission_data,`${index}`,`${this.user2.userId}`,"2018-10-1,13:14:00")
     res.then((result:boolean)=>{
       console.log(result?'新建成功':"新建失败")
     })
@@ -295,13 +296,13 @@ struct OptionPage {
         }
         this.pointArr.length-=1
       }
-
       this.pointArr.forEach(value=>{
         console.log(JSON.stringify(value))
       })
     }
   }
 
+  //地图标点显示
   showMarker(position:mapCommon.LatLng){
     console.log('添加标记')
     /*let x=Math.random()/10;
@@ -324,6 +325,16 @@ struct OptionPage {
     })
   }
 
+  finishChange(){
+    //let index=this.tasks==null?0:this.tasks.length
+    //let pointIndex=this.pointArr1==null?0:this.pointArr1.length
+    this.pointArr1.forEach((value:Point,index:number)=>{
+      let res=TAdd(TABLE_.water_quality_data,`${this.tasksIndex}0${index}`,`${this.tasksIndex-1}`,`2024-07-29,13:40:03`,value.latitude,value.longitude,`7.14`,`12.10`)
+      res.then((result:boolean)=>{
+        console.log(result?'新建成功':"新建失败")
+      })
+    })
+  }
 
   build() {
     Stack({ alignContent: Alignment.TopStart }) {
@@ -455,7 +466,10 @@ struct OptionPage {
           .height(100)
           Row(){
             Button('完成')
-              .onClick(()=>{this.taskPointFlag=! this.taskPointFlag})
+              .onClick(()=>{
+                this.taskPointFlag=!this.taskPointFlag
+                this.finishChange()
+              })
               .type(ButtonType.Normal)
               .backgroundColor('rgb(220,220,220)')
 
