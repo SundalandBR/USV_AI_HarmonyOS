@@ -1,0 +1,13 @@
+{
+  "src": [
+    "pages/LoginPage",
+    "pages/Index",
+    "pages/SignupPage",
+    "pages/OptionPage",
+    "pages/AboutPage",
+    "pages/FeedBackPage",
+    "pages/UserPage",
+    "pages/BlueToothPage",
+    "pages/PageTest"
+  ]
+}

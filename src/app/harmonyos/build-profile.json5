@@ -1,0 +1,49 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "storePassword": "000000196FE1422A106AC9CC50162AF0E0202A0748EA311453ACE7DAA14DFD65C3985428B728D1DBFF",
+          "certpath": "D:/harmonyKey/map.cer",
+          "keyAlias": "map",
+          "keyPassword": "00000019F44FC620BD8F49B8E0DA1B5D75BD4F33940CABEB051E937706B6ED91C7B27771DAD00CFCF7",
+          "profile": "D:/harmonyKey/mapDebug.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "D:/harmonyKey/map.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
