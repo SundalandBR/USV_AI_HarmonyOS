@@ -4,7 +4,10 @@ import onnxruntime as rt
 import cv2
 import os
 import time
-from letter_box import letterbox
+from letter_box import letterbox,letterbox_yolo,scale_image,scale_coords,draw_bbox
+import torch
+from det_seg import postprocess,process_mask,random_color
+
 
 class result:
     def __init__(self,path):
@@ -14,7 +17,8 @@ class result:
         self.orig_img,self.orig_shape = self.orig()
         self.speed = dict(preprocess = 0,inference = 0,postprocess = 0)
         self.ret_img = self.orig_img
-        self.probs = []
+        self.pred = []
+        self.mask = []
     
     def orig(self):
         img = cv2.imread(self.path)
@@ -35,6 +39,7 @@ class model:
     def inference(self, img_path):
         self.results = result(img_path)
         self.img = self.results.orig_img
+        print(self.img)
         start = time.time()
         img_, scale_ratio, pad_size = letterbox(self.img, new_shape=[640, 640])
         img = img_ / 255.
@@ -43,7 +48,7 @@ class model:
         end = time.time()
         self.results.speed['preprocess'] = (end - start) * 100
         start = time.time()
-        sess = rt.InferenceSession('..\\..\\..\\resource\\onnx\\best.onnx')
+        sess = rt.InferenceSession(self.model)
         input_name = sess.get_inputs()[0].name
         label_name = sess.get_outputs()[0].name
         pred = sess.run([label_name], {input_name: img.astype(np.float32)})[0]
@@ -97,5 +102,53 @@ class model:
         self.results.speed['postprocess'] = (end - start) * 100
         print("inference success!")
         return self.results
+    
+    def inference_seg(self,img_path):
+        #初始化
+        self.results = result(img_path)
+        self.img = self.results.orig_img
+        dst_size = (640,640)
+        #预处理
+        start = time.time()
+        img_, scale_ratio, pad_size = letterbox_yolo(self.img, new_shape=[640, 640])
+        img = img_ / 255.
+        img = img[:, :, ::-1].transpose(2, 0, 1)
+        img = np.expand_dims(img, 0)
+        self.results.speed['preprocess'] = (time.time() - start) * 100
+        
+        #推理
+        start = time.time()
+        sess = rt.InferenceSession(self.model)
+        input_name = sess.get_inputs()[0].name
+        pred = sess.run(None, {input_name: img.astype(np.float32)})
+        self.results.speed['inference'] = (time.time() - start) * 100
+        
+        #后处理
+        start = time.time()
+        output0 = np.array(pred[0]).transpose((0,2,1))
+        output1 = torch.from_numpy(pred[1][0])
+        print(output1.shape)
+        pred = postprocess(output0)
+        pred = torch.from_numpy(np.array(pred))
+        masks = process_mask(output1, pred[:, 6:], pred[:, :4], dst_size, True)
+        masks = scale_image(im1_shape=img_.shape,masks=masks,im0_shape=self.img.shape)
+        masks = masks.transpose((2,0,1)).astype(np.uint8)
+        for i,mask in enumerate(masks):
+            label = int(pred[i][5])
+            color = np.array(random_color(label))
+            colored_mask = (np.ones((self.img.shape[0],self.img.shape[1],3))*color).astype(np.uint8)
+            print(colored_mask)
+            masked_colored_mask = cv2.bitwise_and(colored_mask,colored_mask,mask=mask)
+            mask_indices = mask == 1
+            self.img[mask_indices] = (self.img[mask_indices]*0.6 + masked_colored_mask[mask_indices]*0.4).astype(np.uint8)
+        scale_coords([640,640],pred[:,:4],self.img.shape)
+        img_dw = draw_bbox(pred,self.img,(0,255,0),2)
+        self.results.ret_img = img_dw[:,:,::-1]
+        self.results.mask = masks
+        self.results.pred = pred
+        self.results.speed['postprocess'] = (time.time() - start) * 100
+        return self.results
+
+
 
 

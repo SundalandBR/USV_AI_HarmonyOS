@@ -4,6 +4,8 @@ import cv2
 import matplotlib.pyplot as plt
 import letter_box as lb
 import os
+import det_seg as ds
+import torch
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 
@@ -18,6 +20,7 @@ def nms(pred, conf_thres, iou_thres):
     Returns: 输出后的结果
     """
     box = pred[pred[..., 4] > conf_thres]  # 置信度筛选
+    print(np.array(box).shape)
     cls_conf = box[..., 5:]
     cls = []
     for i in range(len(cls_conf)):
@@ -162,33 +165,54 @@ def post_processing(pred,conf=0.25,iou=0.45):
 
 if __name__ == '__main__':
     height, width = 640, 640
-    img0 = cv2.imread('D:\\Module_dataset\\flow_dataset\\images\\train\\000521.jpg')
-    x_scale = img0.shape[1] / width
-    y_scale = img0.shape[0] / height
+    img0 = cv2.imread('D:\\Module_dataset\\flow_dataset\\images\\train\\000543.jpg')
     dst_size = (640,640)
-    img = lb.letterbox_image(img0,dst_size)
-    #img, scale_ratio, pad_size = lb.letterbox_yolo(img0,dst_size)
+    #img = lb.letterbox_image(img0,dst_size)
+    img, scale_ratio, pad_size = lb.letterbox_yolo(img0,dst_size)
     imgy = img
-    cv2.imwrite('shape.jpg', img)
     img = img / 255.0
     #img = cv2.resize(img, (width, height))
     img = img[:, :, ::-1].transpose(2, 0, 1)
     data = np.expand_dims(img, axis=0)
-    sess = rt.InferenceSession('..\\..\\..\\resource\\onnx\\best.onnx')
+    sess = rt.InferenceSession('..\\..\\..\\resource\\onnx\\seg_best.onnx')
     input_name = sess.get_inputs()[0].name
-    label_name = sess.get_outputs()[0].name
-    pred = sess.run([label_name], {input_name: data.astype(np.float32)})[0]
-    pred = np.squeeze(pred)
-    pred = np.transpose(pred, (1, 0))
-    pred_class = pred[..., 4:]
-    pred_conf = np.max(pred_class, axis=-1)
-    pred = np.insert(pred, 4, pred_conf, axis=-1)
-    results = nms(pred, 0.25, 0.45)
-    print(results)
-    results = np.array(results)
-    #lb.scale_coords([640, 640], results[:, :4], img0.shape,ratio_pad=(scale_ratio, pad_size))
-    img_dw = lb.draw_bbox(results, imgy, (0, 255, 0),2)
-    cv2.imwrite('result.png', img_dw)
+    pred = sess.run(None, {input_name: data.astype(np.float32)})
+    
+    output0 = np.array(pred[0]).transpose((0,2,1))
+    output1 = pred[1][0]
+    output1 = torch.from_numpy(output1)
+    print(output1.shape)
+    pred = ds.postprocess(output0)
+    pred = torch.from_numpy(np.array(pred))
+    masks = ds.process_mask(output1, pred[:, 6:], pred[:, :4], dst_size, True)
+    masks = lb.scale_image(im1_shape=imgy.shape,masks=masks,im0_shape=img0.shape)
+    masks = masks.transpose((2,0,1)).astype(np.uint8)
+    for i,mask in enumerate(masks):
+        label = int(pred[i][5])
+        color = np.array(ds.random_color(label))
+        colored_mask = (np.ones((img0.shape[0],img0.shape[1],3))*color).astype(np.uint8)
+        print(colored_mask)
+        masked_colored_mask = cv2.bitwise_and(colored_mask,colored_mask,mask=mask)
+        mask_indices = mask == 1
+        img0[mask_indices] = (img0[mask_indices]*0.6 + masked_colored_mask[mask_indices]*0.4).astype(np.uint8)
+
+    lb.scale_coords([640, 640], pred[:, :4], img0.shape)
+    img_dw = lb.draw_bbox(pred,img0,(0,255,0),2)
+    cv2.imwrite('result.jpg',img_dw)
+
+    # pred = pred[0]
+    # pred = np.squeeze(pred)
+    # pred = np.transpose(pred, (1, 0))
+    # pred_class = pred[..., 4:]
+    # pred_conf = np.max(pred_class, axis=-1)
+    # pred = np.insert(pred, 4, pred_conf, axis=-1)
+    # print(pred.shape)
+    # results = nms(pred, 0.25, 0.45)
+    # print(results)
+    # results = np.array(results)
+    # #lb.scale_coords([640, 640], results[:, :4], img0.shape,ratio_pad=(scale_ratio, pad_size))
+    # img_dw = lb.draw_bbox(results, imgy, (0, 255, 0),2)
+    # cv2.imwrite('result.png', img_dw)
     # for result in results:
     #     print("rect", result[:4], "truth", result[4], "type", result[5])
     # ret_img, rect = draw(img0, x_scale, y_scale, results)

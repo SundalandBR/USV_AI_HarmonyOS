@@ -5,3 +5,5 @@
 /.runs
 test.py
 **/__pycache__
+*.jpg
+*.avi
