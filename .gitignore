@@ -1,0 +1,9 @@
+
+/.idea
+/.idea
+/.wandb
+/.runs
+test.py
+**/__pycache__
+*.jpg
+*.avi

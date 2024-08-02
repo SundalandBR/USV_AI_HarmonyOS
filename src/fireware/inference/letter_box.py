@@ -104,6 +104,40 @@ def clip_coords(boxes, shape):
         boxes[:, [0, 2]] = boxes[:, [0, 2]].clip(0, shape[1])  # x1, x2
         boxes[:, [1, 3]] = boxes[:, [1, 3]].clip(0, shape[0])  # y1, y2
 
+def scale_image(im1_shape, masks, im0_shape, ratio_pad=None):
+    """
+    Takes a mask, and resizes it to the original image size
+
+    Args:
+      im1_shape (tuple): model input shape, [h, w]
+      masks (torch.tensor): [h, w, num]
+      im0_shape (tuple): the original image shape
+      ratio_pad (tuple): the ratio of the padding to the original image.
+
+    Returns:
+      masks (torch.tensor): The masks that are being returned.
+    """
+    # Rescale coordinates (xyxy) from im1_shape to im0_shape
+    print("---------------------------")
+    gain = min(im1_shape[0] / im0_shape[0], im1_shape[1] / im0_shape[1])  # gain  = old / new
+    pad = (im1_shape[1] - im0_shape[1] * gain) / 2, (im1_shape[0] - im0_shape[0] * gain) / 2  # wh padding
+    top, left = int(pad[1]), int(pad[0])  # y, x
+    bottom, right = int(im1_shape[0] - pad[1]), int(im1_shape[1] - pad[0])
+    if len(masks.shape) < 2:
+        raise ValueError(f'"len of masks shape" should be 2 or 3, but got {len(masks.shape)}')
+    masks = masks.permute(1, 2, 0).contiguous()
+    masks = masks[top:bottom, left:right]
+    print(top,bottom,left,right)
+    # masks = masks.permute(2, 0, 1).contiguous()
+    # masks = F.interpolate(masks[None], im0_shape[:2], mode='bilinear', align_corners=False)[0]
+    print(type(masks))
+    masks = cv2.resize(masks.cpu().numpy(), (im0_shape[1], im0_shape[0]))
+
+    if len(masks.shape) == 2:
+        masks = masks[:, :, None]
+    return masks
+
+
 
 def draw_bbox(bbox, img0, color, wt):
     #det_result_str = ''
