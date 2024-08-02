@@ -110,6 +110,7 @@ struct LoginPage {
   login(){
     let session = rcp.createSession();
     let _url = url.URL.parseURL(`http://47.96.237.24:8080/poi/login?username=${this.username}&password=${this.password}`);
+    console.log( _url.toString() )
 
     session.post(_url).then((response) => {
       //response为rcp.Response对象,服务器返回的内容

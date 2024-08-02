@@ -33,10 +33,12 @@ interface WaterData{
   "ph": number,
   "dissolvedOxygen": number,
   "conductivity": number,
+  "temperature":number,
   "turbidity": number,
   "ammoniaNitrogen": number,
   "organicMatter": number
 }
+
 interface  Mission{
   "missionId":number;
   "userId":number;
@@ -51,7 +53,17 @@ interface  Mission{
   "videoId":number;
 }
 
-
+interface Navigation{
+  "navigationId":number
+  "missionId":number
+  "timestamp":string
+  "latitude":number
+  "longitude":number
+  "speed":number
+  "course":number
+  "status":number
+  "batteryLevel":number
+}
 
 
 
@@ -152,6 +164,17 @@ async function TEdit(tableIndex:TABLE_,Id:number,column:string,value:string):Pro
       resolve(obj.code==1)
     },1500)
   })
-  return result ;
+  return result;
 }
-export{TGet,TAdd,TDelete,TEdit,WaterData,Point,Mission,IPAddress,Port,TABLE_}
+
+async function GetResponseForNavigation(callback:Callback<string>){
+  let session = rcp.createSession();
+  let _url = url.URL.parseURL(`http://47.96.237.24:5000/text_feed`);
+  await  session.get(_url).then((response) => {
+    callback(response.toString())
+  }).catch((err: BusinessError) => {
+    console.error(`err: err code is ${err.code}, err message is ${JSON.stringify(err)}`);
+  });
+}
+
+export{TGet,TAdd,TDelete,TEdit,WaterData,Point,Mission,IPAddress,Port,TABLE_,GetResponseForNavigation,Navigation}

@@ -2,12 +2,14 @@ import { DividerModifier } from '@ohos.arkui.modifier'
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
 import { interfaceUser } from '../interfaces/InterfaceUser'
+import { GetBlueToothCharacteristic, stopBlueToothCharacteristic, unLock } from '../utils/AccessUtil'
+import { ble } from '@kit.ConnectivityKit'
 
 @Entry
 @Component
 struct Index {
   private flag=false
-
+  private subscribeFlag=false
   @State user1:interfaceUser= {
     userId: 0,
     username: '',
@@ -135,16 +137,24 @@ struct Index {
           }
           Row(){
             Toggle({type:ToggleType.Switch,isOn:false})
-              .onChange(()=>{
-                if(this.flag){
-                  this.flag=false
+              .onChange((isOn)=>{
+                let device:ble.GattClientDevice=AppStorage.get("gattClient") as ble.GattClientDevice
+                console.log('test'+device)
+                if(isOn){
+                  unLock(device,1)
                 }
                 else{
-                  this.flag=true
+                  unLock(device,0)
                 }
               })
           }
           .margin({right:10})
+          //GetBlueToothCharacteristic(AppStorage.get('gattClient') as ble.GattClientDevice)
+          Button('订阅事件')
+            .onClick(()=>{
+              !this.subscribeFlag?GetBlueToothCharacteristic(AppStorage.get('gattClient') as ble.GattClientDevice):stopBlueToothCharacteristic(AppStorage.get('gattClient') as ble.GattClientDevice)
+              this.subscribeFlag=!this.subscribeFlag
+            })
         }
         .margin({top:10})
         .width('100%')
@@ -160,6 +170,7 @@ struct Index {
       }
       .alignItems(HorizontalAlign.Start)
       .margin({top:90})
+
     }
     .padding({left:15,right:15})
     .showSideBar(false)

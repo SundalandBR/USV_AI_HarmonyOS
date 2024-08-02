@@ -5,13 +5,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "storePassword": "000000196FE1422A106AC9CC50162AF0E0202A0748EA311453ACE7DAA14DFD65C3985428B728D1DBFF",
-          "certpath": "D:/harmonyKey/map.cer",
-          "keyAlias": "map",
-          "keyPassword": "00000019F44FC620BD8F49B8E0DA1B5D75BD4F33940CABEB051E937706B6ED91C7B27771DAD00CFCF7",
-          "profile": "D:/harmonyKey/mapDebug.p7b",
+          "storePassword": "000000199CBC55C7DAEE5FA0226EB10835F94B84AAD07BD9BF4644D099E3CA5E6C23BACA99E4D08265",
+          "certpath": "D:/harmonyKey/无人艇.cer",
+          "keyAlias": "wurenting",
+          "keyPassword": "00000019CC50BFE819038F8BAF24DA0F9E4CD527DBADDA83AD0A2C5D58CA2D985B9C1378167AA53307",
+          "profile": "D:/harmonyKey/无人艇Debug.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "D:/harmonyKey/map.p12"
+          "storeFile": "D:/harmonyKey/wurenting.p12"
         }
       }
     ],

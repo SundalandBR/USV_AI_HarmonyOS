@@ -9,9 +9,13 @@ import { rcp } from '@kit.RemoteCommunicationKit';
 import { url } from '@kit.ArkTS';
 import { interfaceUser, Json_msg } from '../interfaces/InterfaceUser';
 import { InterfaceMission } from '../interfaces/InterfaceMission';
-import { Mission, Point, TABLE_, TAdd, TEdit, TGet } from '../utils/MysqlUtil';
+import { GetResponseForNavigation, Mission, Navigation, Point, TABLE_, TAdd, TEdit, TGet,
+  WaterData } from '../utils/MysqlUtil';
 import { webview } from '@kit.ArkWeb';
 import systemDateTime from '@ohos.systemDateTime';
+import { upload, WriteBlueToothCharacteristic } from '../utils/AccessUtil';
+import { ble } from '@kit.ConnectivityKit';
+
 @Entry
 @Component
 struct OptionPage {
@@ -19,6 +23,7 @@ struct OptionPage {
   @State taskFlag:boolean=false;//是否弹出任务框
   @State taskPointFlag:boolean=false;//标点页面弹出
   @State videoFlag:boolean=false;
+  @State sensorFlag:boolean=false;
   private mapController:map.MapComponentController=new map.MapComponentController()//地图控制器
   private controller: webview.WebviewController = new webview.WebviewController();//视频控制器
 
@@ -27,13 +32,29 @@ struct OptionPage {
   //标点数组
   @State pointArr:map.Marker[]=[];
   @State pointArr1:Point[]=[];
+  @State pointArr2:mapCommon.LatLng[]=[]
   private polyLine:map.MapPolyline | null=null;
   @State tasks:Mission[]=[]
-  @State pointArr2:mapCommon.LatLng[]=[]
   @State polyLineArr:map.MapPolyline[] | null=null;
+  @State marker1:map.Marker|null=null
+  @State water:WaterData[]=[]
+  @State btMac:string=""
   //下标
   @State markIndex:number=0
+  @State markIndex1:number=0
   private tasksIndex:number=0
+
+  @State navigation:Navigation= {
+    navigationId: 0,
+    missionId: 0,
+    timestamp: '',
+    latitude: 0,
+    longitude: 0,
+    speed: 0,
+    course: 0,
+    status: 0,
+    batteryLevel: 0
+  }
 
   @State user2:interfaceUser= {
     userId: 0,
@@ -43,7 +64,6 @@ struct OptionPage {
     devUuidList: '',
     missionIdList: ''
   };
-
 
 
   mapOptions:mapCommon.MapOptions={
@@ -65,6 +85,7 @@ struct OptionPage {
     this.mapController.setZoomGesturesEnabled(true)//动态设置手势缩放
 
     this.mapController.on("mapClick",(position)=>this.addMarker(position))
+    this.mapController.on("markerClick", (marker) => this.markerClickHandler(marker))
     //this.mapController.on("markerDrag",()=>this.markerDragHandler())
     //this.mapController.on("markerDragStart",()=>this.markerDragHandler())
     //this.mapController.on("mapLoad",()=>this.showPointList())
@@ -100,6 +121,13 @@ struct OptionPage {
     this.mapController.addMarker(markerOption).then(result=>{
       console.log('新加入的点'+JSON.stringify(result))
       this.pointArr.push(result)
+      let latitude=result.getPosition().latitude
+      let longitude=result.getPosition().longitude
+      console.log(`${latitude}`)
+      this.pointArr1.push({latitude:`${latitude}`,longitude:`${longitude}`})
+      this.pointArr1.forEach((value)=>{
+        console.log(JSON.stringify(value))
+      })
       this.pointArr2.push(result.getPosition())
       this.addLine()
     }).catch((err:BusinessError)=>{
@@ -227,6 +255,7 @@ struct OptionPage {
       while (ListString.search("_") != -1) {
         ListString = ListString.replace("_", "},{");
       }
+      ListString = ListString.replaceAll("!", `"`);
       console.log("ListString:" + (ListString))
       let pl = JSON.parse(ListString) as Point[];
       let pl2 = JSON.parse(ListString) as mapCommon.LatLng[]
@@ -259,9 +288,10 @@ struct OptionPage {
       console.log(value.latitude+"   "+value.longitude)
     })
     let listString=JSON.stringify(pl)
-    while (listString.search("},{") != -1) {
-      listString = listString.replace("},{", "_");
+    while (listString.search(`"`)!= -1) {
+      listString = listString.replace(`"`, "!");
     }
+    listString =listString.replaceAll("},{","_")
     let result:string=""
     for(let i=2;i<listString.length-2;i++){
       result=result+listString[i]
@@ -289,9 +319,10 @@ struct OptionPage {
       //console.log('1'+JSON.stringify(this.pointArr.length))
       this.mapController.clear()
       this.polyLine=null
+      let length=this.pointArr.length
       console.log('数量'+this.pointArr.length)
-      for(let j=0;this.pointArr.length%2==0?j<=this.pointArr.length:j<=this.pointArr.length+1;j++){
-        for(let i=0;i<this.pointArr.length-1;i++){
+      for(let j=0;j<=length;j++){
+        for(let i=0;i<length-1;i++){
           this.pointArr[i]=this.pointArr[i+1]
         }
         this.pointArr.length-=1
@@ -312,7 +343,7 @@ struct OptionPage {
     //构造标记点对象
     let markerOption:mapCommon.MarkerOptions={
       position:position,
-      draggable:true,
+      clickable:true,
       title:'标记',
       zIndex:2,
     }
@@ -325,15 +356,78 @@ struct OptionPage {
     })
   }
 
+  //完成标点或任务修改
   finishChange(){
     //let index=this.tasks==null?0:this.tasks.length
     //let pointIndex=this.pointArr1==null?0:this.pointArr1.length
+    this.pointArr1.forEach((value:Point)=>{
+      console.log(value.latitude+"   "+value.longitude)
+    })
+    let listString=JSON.stringify(this.pointArr1)
+    while (listString.search("},{")!= -1) {
+      listString = listString.replace(`},{`, "_");
+
+    }
+    listString = listString.replaceAll(`"`, "!");
+    let result:string=""
+    for(let i=2;i<listString.length-2;i++){
+      result=result+listString[i]
+    }
+    let id=this.tasks[this.tasksIndex-1].missionId
+    console.log(`${id}`)
+    console.log('ListString:'+listString)
+    console.log('result:'+result)
+    let res=TEdit(TABLE_.mission_data,id,"position_list",result)
+    res.then((result)=>{
+      console.log(result?"操作成功":"操作失败")
+    })
+
     this.pointArr1.forEach((value:Point,index:number)=>{
       let res=TAdd(TABLE_.water_quality_data,`${this.tasksIndex}0${index}`,`${this.tasksIndex-1}`,`2024-07-29,13:40:03`,value.latitude,value.longitude,`7.14`,`12.10`)
       res.then((result:boolean)=>{
         console.log(result?'新建成功':"新建失败")
       })
     })
+  }
+
+  //从平台获取状态
+  getNavigation(){
+    GetResponseForNavigation(()=>{
+
+    })
+  }
+
+  //水质检测信息
+  getSensor(){
+    console.log('获取水质信息')
+    let res =TGet(TABLE_.water_quality_data,"mission_id",`${this.tasksIndex-1}`)
+    res.then((result:string)=>{
+      console.info("-------->" + result);
+      let WaterDataList=JSON.parse(result) as WaterData[]
+      this.water=WaterDataList
+      WaterDataList.forEach((value:WaterData,index:number)=> {
+        console.log(`第${index + 1}个点的坐标:{经度:${value.longitude},纬度:${value.latitude}}`)
+      })
+    })
+  }
+
+  //标记点击事件
+  markerClickHandler(marker:map.Marker){
+    console.log('点击了一个点')
+    console.log('经度是：'+marker.getPosition().longitude)
+    console.log('纬度是：'+marker.getPosition().latitude)
+    this.markIndex1=this.pointArr.indexOf(marker)
+    console.log(`this.markIndex1:${this.markIndex1}`)
+    this.sensorFlag=!this.sensorFlag
+    console.log(`this.sensorFlag:${this.sensorFlag}`)
+    //this.getSensor(marker)
+  }
+
+  //发送任务到手柄
+  sendTask(){
+    upload(this.pointArr2,AppStorage.get("gattClient") as ble.GattClientDevice)
+    //发送start命令
+    WriteBlueToothCharacteristic(300,0,0,this.pointArr.length,0,0,0,0,0,this.btMac)
   }
 
   build() {
@@ -392,7 +486,15 @@ struct OptionPage {
             .backgroundColor('rgb(225,255,255)')
             .fontColor(Color.Black)
             .onClick(()=>{
-
+              WriteBlueToothCharacteristic(178,0,0,-1,-1,0,0,0,0,this.btMac)
+            })
+          Button('水质信息')
+            .margin({ left:50 ,bottom:20})
+            .type(ButtonType.Normal)
+            .backgroundColor('rgb(225,255,255)')
+            .fontColor(Color.Black)
+            .onClick(()=> {
+              this.getSensor()
             })
         }
 
@@ -431,19 +533,28 @@ struct OptionPage {
             .width(150)
             .height(150)
           }
-          Row(){
-            Button('+新建任务')
-              .onClick(()=>this.createTask())
-              .type(ButtonType.Normal)
-              .backgroundColor('rgb(220,220,220)')
-
-          }.align(Alignment.Bottom)
+          Column(){
+            Row(){
+              Button('发送')
+                .onClick(()=>this.sendTask())
+                .type(ButtonType.Normal)
+                .backgroundColor('rgb(220,220,220)')
+            }
+            Row() {
+              Button('+新建任务')
+                .onClick(() => this.createTask())
+                .type(ButtonType.Normal)
+                .backgroundColor('rgb(220,220,220)')
+                .margin({ top:10})
+            }
+          }
         }
         .backgroundColor(Color.White)
         .width(150)
-        .height(200)
+        .height(250)
         .position({x:120,y:100})
         .visibility(this.taskFlag?Visibility.Visible:Visibility.None)
+        .padding(5)
 
         //任务标点列表窗口
         Column(){
@@ -452,6 +563,7 @@ struct OptionPage {
               ListItem(){
                 Row(){
                   Text(`longitude:${val.longitude},latitude:${val.latitude}`)
+                    .width(200)
                   Image($r('app.media.delete'))
                     .width(24)
                     .height(24)
@@ -475,11 +587,78 @@ struct OptionPage {
 
           }.align(Alignment.Bottom)
         }
-        .width(230)
+        .width(250)
         .height(150)
         .position({x:580,y:220})
         .visibility(this.taskFlag&&this.taskPointFlag?Visibility.Visible:Visibility.None)
         .backgroundColor(Color.White)
+
+        //水质
+        Column({ space: 10 }) {
+          List(){
+            ForEach(this.water,(val:WaterData,index:number)=>{
+              ListItem(){
+                Column(){
+                  if(val.waterDataId-100==this.markIndex1){
+                    Row(){
+                      Text('水质信息：')
+                        .fontSize(20)
+                    }
+                    .justifyContent(FlexAlign.Start)
+                    .margin({top:5,bottom:10})
+                    .width('100%')
+                    Line()
+                      .width('100%')
+                      .height(1)
+                      .backgroundColor(Color.Black)
+                    Row(){
+                      Text('PH:'+val.ph)
+                        .margin({left:10,right:20})
+                      Text('含氧量：'+val.dissolvedOxygen)
+                    }
+                    .justifyContent(FlexAlign.Start)
+                    .margin({top:5,bottom:10})
+                    .width('100%')
+                    Row(){
+                      Text('电导率：'+val.conductivity)
+                        .margin({left:10,right:20})
+                      Text('温度：'+val.temperature)
+                    }
+                    .justifyContent(FlexAlign.Start)
+                    .margin({top:5,bottom:10})
+                    .width('100%')
+                    Row(){
+                      Text('浊度：'+val.turbidity)
+                        .margin({left:10,right:20})
+                      Text('氨氮：'+val.ammoniaNitrogen)
+                    }
+                    .justifyContent(FlexAlign.Start)
+                    .margin({top:5,bottom:10})
+                    .width('100%')
+                    Row(){
+                      Text('有机物：'+val.organicMatter)
+                        .margin({left:10,right:20})
+                    }
+                    .justifyContent(FlexAlign.Start)
+                    .margin({top:5,bottom:10})
+                    .width('100%')
+                  }
+                }
+              }
+            })
+          }
+        }
+        .borderRadius(10)
+        .alignItems(HorizontalAlign.Start)
+        .offset({ x: '70%', y: '5%' })
+        .backgroundColor(Color.White)
+        .opacity(0.5)
+        .width('30%')
+        .height('20%')
+        .position({x:560,y:20})
+        .visibility(this.sensorFlag?Visibility.Visible:Visibility.None)
+
+        //视频窗口
         Column(){
           Web({ src: 'http://47.96.237.24:5000/', controller: this.controller, incognitoMode: true })
           //let video=media.createAVPlayer()
