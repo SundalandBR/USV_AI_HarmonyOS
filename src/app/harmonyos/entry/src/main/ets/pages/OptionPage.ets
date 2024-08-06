@@ -10,6 +10,7 @@ import { url } from '@kit.ArkTS';
 import { interfaceUser, Json_msg } from '../interfaces/InterfaceUser';
 import { InterfaceMission } from '../interfaces/InterfaceMission';
 import { GetResponseForNavigation, Mission, Navigation, Point, TABLE_, TAdd, TEdit, TGet,
+  Token_AAA,
   WaterData } from '../utils/MysqlUtil';
 import { webview } from '@kit.ArkWeb';
 import systemDateTime from '@ohos.systemDateTime';
@@ -217,7 +218,7 @@ struct OptionPage {
   getPointList(){
     this.taskPointFlag=! this.taskPointFlag
     this.pointArr2=[]
-    let session = rcp.createSession();
+    let session = rcp.createSession({headers: {"Authorization": Token_AAA, }});
     let IPAddress:string="47.96.237.24";
     let Port:number=8080;
     let _url = url.URL.parseURL
@@ -241,6 +242,7 @@ struct OptionPage {
       videoId: 0
     }
     session.get(_url).then((response) => {
+      console.log('dataGet')
       obj = response.toJSON() as Json_msg; //将其解析为Json_msg
       console.log(JSON.stringify(obj.Data));
 
@@ -390,13 +392,6 @@ struct OptionPage {
     })
   }
 
-  //从平台获取状态
-  getNavigation(){
-    GetResponseForNavigation(()=>{
-
-    })
-  }
-
   //水质检测信息
   getSensor(){
     console.log('获取水质信息')
@@ -427,7 +422,12 @@ struct OptionPage {
   sendTask(){
     upload(this.pointArr2,AppStorage.get("gattClient") as ble.GattClientDevice)
     //发送start命令
-    WriteBlueToothCharacteristic(300,0,0,this.pointArr.length,0,0,0,0,0,this.btMac)
+    WriteBlueToothCharacteristic(300,0,0,this.pointArr.length,0,0,0,0,0,AppStorage.get("gattClient") as ble.GattClientDevice)
+  }
+
+  //获取无人艇状态信息
+  getNavigation(){
+
   }
 
   build() {
@@ -486,7 +486,8 @@ struct OptionPage {
             .backgroundColor('rgb(225,255,255)')
             .fontColor(Color.Black)
             .onClick(()=>{
-              WriteBlueToothCharacteristic(178,0,0,-1,-1,0,0,0,0,this.btMac)
+              console.log('发送停止指令')
+              WriteBlueToothCharacteristic(178,0,0,-1,-1,0,0,0,0,AppStorage.get("gattClient") as ble.GattClientDevice)
             })
           Button('水质信息')
             .margin({ left:50 ,bottom:20})
@@ -501,13 +502,13 @@ struct OptionPage {
         //无人艇运行状态
         Row(){
           Column(){
-            Text('0.00')
+            Text(`${this.navigation.speed}`)
             Text('时速(km/h)')
             //XComponent({ id: 'xcomponentId1', type: 'surface', libraryname: 'nativerender' })
 
           }
           Column(){
-            Text('电量')
+            Text(`电量`+`${this.navigation.batteryLevel}`)
           }
         }
         .backgroundColor(Color.White)
@@ -540,7 +541,7 @@ struct OptionPage {
                 .type(ButtonType.Normal)
                 .backgroundColor('rgb(220,220,220)')
             }
-            Row() {
+            Row(){
               Button('+新建任务')
                 .onClick(() => this.createTask())
                 .type(ButtonType.Normal)

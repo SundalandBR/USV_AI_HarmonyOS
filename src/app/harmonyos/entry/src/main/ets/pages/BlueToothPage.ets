@@ -91,14 +91,13 @@ struct BlueToothPage {
       data.forEach((val:string)=>{
         console.log('蓝牙MAC地址是：'+val)
         btName=connection.getRemoteDeviceName(val)
-
         console.log('蓝牙名称：'+btName + ",蓝牙地址：" + val)
-
-        this.bluetoothDevice.push({
-          mac:val,
-          deviceName:btName
-        })
-
+        if(btName!=''){
+          this.bluetoothDevice.push({
+            mac:val,
+            deviceName:btName
+          })
+        }
       })
     }catch (err){
 
@@ -106,10 +105,8 @@ struct BlueToothPage {
 
   }
 
-  //发起蓝牙配
+  //发起蓝牙配对
   InitiateTeam(device:BluetoothDevice){
-
-
     try {
       connection.pairDevice(device.mac,(err:BusinessError)=>{
         console.info('pairDevice, device name err:' + JSON.stringify(err))
@@ -153,7 +150,7 @@ struct BlueToothPage {
         console.log(device.deviceName)
         console.log(`${AppStorage.get("gattClient")}`)
 
-          this.gattClient?.on("BLEConnectionStateChange",(res:ble.BLEConnectionChangeState)=>{
+          this.gattClient.on("BLEConnectionStateChange",(res:ble.BLEConnectionChangeState)=>{
             console.log('连接到的设备是：'+connection.getRemoteDeviceName(res.deviceId));
             hilog.debug(0,"bleStatus",JSON.stringify(res))
           })
@@ -166,7 +163,6 @@ struct BlueToothPage {
 
   //获取已配对列表
   PairingBT(){
-
     try {
       console.log('获取已配对列表')
       let pairName:string=''
@@ -177,7 +173,6 @@ struct BlueToothPage {
         console.log('已配对蓝牙的名字：'+pairName)
         this.matchedbt.push(pairName)
       })
-
     }catch (err){
       console.error('errCode: ' + (err as BusinessError).code + ', errMessage: ' + (err as BusinessError).message)
     }
@@ -275,7 +270,6 @@ struct BlueToothPage {
         }
       }
       .height('35%')
-
 
       //可用设备以及他们的名字
       Column(){

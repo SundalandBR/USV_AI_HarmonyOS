@@ -45,6 +45,7 @@ struct MavLink_Pack
     {
         if(buffer==NULL) return ;
         delete [] buffer_;
+        buffer_=NULL;
         buffer_=new std::uint8_t[buflen];
         buflen_=buflen;
         memcpy(buffer_, buffer, buflen);
@@ -53,6 +54,7 @@ struct MavLink_Pack
     MavLink_Pack(const MavLink_Pack& rhs)
     {
         delete [] buffer_;
+        buffer_=NULL;
         buflen_=rhs.buflen_;
         buffer_=new std::uint8_t[rhs.buflen_];
         memcpy(buffer_,rhs.buffer_,rhs.buflen_);
@@ -62,6 +64,7 @@ struct MavLink_Pack
     {
         if(&rhs==this) return *this;
         delete [] buffer_;
+        buffer_=NULL;
         buflen_=rhs.buflen_;
         buffer_=new std::uint8_t[rhs.buflen_];
         memcpy(buffer_,rhs.buffer_,rhs.buflen_);
@@ -71,6 +74,7 @@ struct MavLink_Pack
     MavLink_Pack(MavLink_Pack&& rhs)
     {
         delete [] buffer_;
+        buffer_=NULL;
         buflen_=rhs.buflen_;
         buffer_=rhs.buffer_;
         rhs.buffer_=nullptr;
@@ -80,6 +84,7 @@ struct MavLink_Pack
     {
         if(this==&rhs) return *this;
         delete [] buffer_;
+        buffer_=NULL;
         buflen_=rhs.buflen_;
         buffer_=rhs.buffer_;
         rhs.buffer_=nullptr;
@@ -88,9 +93,10 @@ struct MavLink_Pack
     
     ~MavLink_Pack()
     {
-        OH_LOG_Print(LOG_APP, LOG_DEBUG, 0X2005, "INFO_TAG", "%{public}s","准备释放");
+        //OH_LOG_Print(LOG_APP, LOG_DEBUG, 0X2005, "INFO_TAG", "%{public}s","准备释放");
         delete [] buffer_;
-        OH_LOG_Print(LOG_APP, LOG_DEBUG, 0X2005, "INFO_TAG", "%{public}s","被释放了");
+        buffer_=NULL;
+        //OH_LOG_Print(LOG_APP, LOG_DEBUG, 0X2005, "INFO_TAG", "%{public}s","被释放了");
     }
     
     std::size_t buflen_;

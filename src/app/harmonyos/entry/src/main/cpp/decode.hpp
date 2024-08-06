@@ -172,6 +172,63 @@ std::string DecodeVfrHud(const mavlink_message_t& msg)
     return j.dump();
 }
 
+void to_json(const mavlink_mission_request_int_t &value, json &j) {
+    j["mav_cmd"] = MAVLINK_MSG_ID::MISSION_REQUEST_INT;
+    
+    j["target_system"]=value.target_system;
+    j["target_component"]=value.target_component;
+    j["seq"]=value.seq;
+    j["mission_type"]=value.mission_type;
+}
+std::string DecodeMissionRequestInt(const mavlink_message_t &msg) {
+    mavlink_mission_request_int_t value;
+    
+    mavlink_msg_mission_request_int_decode(&msg, &value);
+    
+    json j;
+    to_json(value, j);
+    
+    return j.dump();
+}
+
+void to_json(const mavlink_mission_request_t &value, json &j) {
+    j["mav_cmd"] = MAVLINK_MSG_ID::MISSION_REQUEST;
+    
+    j["target_system"]=value.target_system;
+    j["target_component"]=value.target_component;
+    j["seq"]=value.seq;
+    j["mission_type"]=value.mission_type;
+}
+std::string DecodeMissionRequest(const mavlink_message_t &msg) {
+    mavlink_mission_request_t value;
+    
+    mavlink_msg_mission_request_decode(&msg, &value);
+    
+    json j;
+    to_json(value, j);
+    
+    return j.dump();
+}
+
+void to_json(const mavlink_mission_ack_t &value, json &j) {
+    j["mav_cmd"] = MAVLINK_MSG_ID::MISSION_ACK;
+    
+    j["target_system"]=value.target_system;
+    j["target_component"]=value.target_component;
+    j["type"]=value.type;
+    j["mission_type"]=value.mission_type;
+}
+std::string DecodeMissionAck(const mavlink_message_t &msg) {
+    mavlink_mission_ack_t value;
+    
+    mavlink_msg_mission_ack_decode(&msg, &value);
+    
+    json j;
+    to_json(value, j);
+    
+    return j.dump();
+}
+
 std::string Decode(const MavLink_Pack_t& pack)
 {
     mavlink_message_t msg;
@@ -181,6 +238,15 @@ std::string Decode(const MavLink_Pack_t& pack)
     for(int i=0;i<pack->buflen_;i++){
         if(mavlink_parse_char(chan, pack->buffer_[i],&msg, &status)==1){
             switch(msg.msgid){
+                case MAVLINK_MSG_ID::MISSION_ACK:
+                    ans=DecodeMissionAck(msg);
+                    break;
+                case MAVLINK_MSG_ID::MISSION_REQUEST:
+                    ans=DecodeMissionRequest(msg);
+                    break;
+                case MAVLINK_MSG_ID::MISSION_REQUEST_INT:
+                    ans = DecodeMissionRequestInt(msg);
+                    break;
                 case MAVLINK_MSG_ID::VFR_HUD:
                     ans=DecodeVfrHud(msg);
                     break;

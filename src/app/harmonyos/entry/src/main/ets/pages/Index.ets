@@ -5,11 +5,18 @@ import { interfaceUser } from '../interfaces/InterfaceUser'
 import { GetBlueToothCharacteristic, stopBlueToothCharacteristic, unLock } from '../utils/AccessUtil'
 import { ble } from '@kit.ConnectivityKit'
 
+
+
+
+//let device_1:ble.GattClientDevice|null=null;
 @Entry
 @Component
 struct Index {
   private flag=false
   private subscribeFlag=false
+  //@StorageProp('gattClient') device:ble.GattClientDevice=AppStorage.get("gattClient") as ble.GattClientDevice
+ // private client:ble.GattClientDevice | null = null;
+
   @State user1:interfaceUser= {
     userId: 0,
     username: '',
@@ -20,6 +27,7 @@ struct Index {
   };
 
   aboutToAppear(): void {
+
     try {
       this.user1=router.getParams() as interfaceUser
     }catch (e){
@@ -139,13 +147,15 @@ struct Index {
             Toggle({type:ToggleType.Switch,isOn:false})
               .onChange((isOn)=>{
                 let device:ble.GattClientDevice=AppStorage.get("gattClient") as ble.GattClientDevice
-                console.log('test'+device)
+                console.log("开关开关开关开关开关开关开关开关开关")
+                console.log('test:'+  device.getDeviceName())
                 if(isOn){
                   unLock(device,1)
                 }
                 else{
                   unLock(device,0)
                 }
+                this.flag=!this.flag
               })
           }
           .margin({right:10})

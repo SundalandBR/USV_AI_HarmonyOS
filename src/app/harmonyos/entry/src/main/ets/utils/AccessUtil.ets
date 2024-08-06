@@ -82,7 +82,7 @@ function openPermissionInSystemSettings(context:common.UIAbilityContext){
     abilityName:"com.huawei.hmos.settings.MainAbility",
     uri:"application_info_entry",
     parameters:{
-      pushParams:"com.example.hwh724"
+      pushParams:"com.example.wurenting"
     }
   }
   context.startAbility(want)
@@ -119,16 +119,18 @@ function GetBlueToothCharacteristic(gattClient:ble.GattClientDevice){
               gattClient.setCharacteristicChangeIndication(characteristic,true,(err)=>{
                 console.log('err:'+JSON.stringify(err))
               });
+
               gattClient.on('BLECharacteristicChange',(res:ble.BLECharacteristic)=>{
                 //返回的二进制特征值（MAV返回的数据包）
                 let value = res.characteristicValue;
-                console.log('value'+new Uint8Array(value))
-
+               // console.log('value'+new Uint8Array(value))
                 //判断消息什么什么的 写在这里
                 str=HexToJson(value)
                 let k=JSON.stringify(str,["mav_cmd"])
-                console.log('mav_cmd:'+k)
-                if(k=='"mav_cmd":51'){
+               // console.log('str:'+str)
+               // console.log('mav_cmd:'+k)
+
+                if(k=='"mav_cmd":51'||k=='"mav_cmd":40'){
                   AppStorage.setOrCreate('mav_cmd',51)
                 }
                 else if(k=='"mav_cmd":47') {
@@ -157,15 +159,13 @@ function sendCommand(command:number,confirmation:number,param1: number,param2: n
 }
 
 //写入蓝牙特征值
-function WriteBlueToothCharacteristic(command:number,confirmation:number,param1: number,param2: number,param3: number,param4: number,param5: number,param6: number,param7: number,mac:string){
-  let gattClient: ble.GattClientDevice=ble.createGattClientDevice(mac)
+function WriteBlueToothCharacteristic(command:number,confirmation:number,param1: number,param2: number,param3: number,param4: number,param5: number,param6: number,param7: number,gattClient:ble.GattClientDevice){
+  //let gattClient: ble.GattClientDevice=ble.createGattClientDevice(mac)
   let characteristicUuid:string = "49535343-8841-43F4-A8D4-ECBE34729BB3"
   let serviceUuid:string = "49535343-FE7D-4AE5-8FA9-9FAFD205E455"
 
   //假设为mavlink消息数据包,用于发送消息指令给飞控
   //const arrayBuffer = new ArrayBuffer(8);
-
-
 
   let arrayBuffer=sendCommand(command,confirmation,param1,param2,param3,param4,param5,param6,param7)
 
@@ -176,28 +176,33 @@ function WriteBlueToothCharacteristic(command:number,confirmation:number,param1:
     descriptors:[]
   }
 
-  gattClient?.writeCharacteristicValue(characteristic,ble.GattWriteType.WRITE);
+  gattClient.writeCharacteristicValue(characteristic,ble.GattWriteType.WRITE).then(()=>{
+    console.log("写入成功")
+  }).catch((e:BusinessError)=>{
+    console.log('写入失败'+JSON.stringify(e))
+  });
 }
 
 //解锁和上锁，0：解锁，1：上锁
 function unLock(gattClient:ble.GattClientDevice,lock:number){
-  let param:CommandLongT=CreateCommandLongT(400,0,lock,0,0,0,0,0,0)
+  let param:CommandLongT=CreateCommandLongT(400,0,lock,21196,0,0,0,0,0)
   let obj_json=JSON.stringify(param)
+  console.log('生成的json;' + obj_json)
   let obj_array=JsonToHex(obj_json)
+  console.log('生成的objArray;' + JSON.stringify(obj_array))
   //console.log('解锁:'+mac)
   //let gattClient: ble.GattClientDevice=ble.createGattClientDevice(mac)
   let serviceUuid:string = "49535343-FE7D-4AE5-8FA9-9FAFD205E455"
   let characteristicUuid:string = "49535343-8841-43F4-A8D4-ECBE34729BB3"
-
   let descriptorUuid:string = "00002902-0000-1000-8000-00805F9B34FB"
-
   let arraybuffer:ArrayBuffer = obj_array.buffer as ArrayBuffer
   let descriptors: Array<ble.BLEDescriptor> = [];
   let descriptor: ble.BLEDescriptor = {
     serviceUuid: serviceUuid,
     characteristicUuid: characteristicUuid,
     descriptorUuid: descriptorUuid,
-    descriptorValue: arraybuffer};
+    descriptorValue: arraybuffer
+  };
   descriptors[0] = descriptor;
 
   let countMi:ArrayBuffer=obj_array.buffer as ArrayBuffer;
@@ -208,16 +213,13 @@ function unLock(gattClient:ble.GattClientDevice,lock:number){
     characteristicValue: countMi,
     descriptors:descriptors
   }
-  console.log("+++" +new Uint8Array(characteristic1.characteristicValue))
 
-  console.log(JSON.stringify(characteristic1).toString())
 
-  gattClient.writeCharacteristicValue(characteristic1,ble.GattWriteType.WRITE_NO_RESPONSE)
+  gattClient.writeCharacteristicValue(characteristic1,ble.GattWriteType.WRITE)
   .then(()=>{
-    console.log("写入成")
-
+    console.log("写入成功")
   }).catch((e:BusinessError)=>{
-    console.log(JSON.stringify(e))
+    console.log('写入失败'+JSON.stringify(e))
   })
 }
 
@@ -248,9 +250,12 @@ function upload(marker:mapCommon.LatLng[],gattClient:ble.GattClientDevice){
   //循环发送航点MISSION_ITEM_INT
   let i:number=0
   while (count!=0) {
-    let str=AppStorage.get('mav_cmd') as number
-    console.log('upload cmd:'+str)
-    if (str == 51) {
+    let cmd=AppStorage.get('mav_cmd') as number
+    if(cmd==null){
+      continue
+    }
+    console.log('upload cmd:'+cmd)
+    if (cmd == 51) {
       //let obj_t=JSON.parse(str) as MissionRequestIntT
       let missionItemInt: MissionItemIntT =
         CreateMissionItemIntT(0, 0, 16, 0, 0, 0, 0, 0, 0, marker[i].latitude, marker[i].longitude, 0, 2)
@@ -264,11 +269,10 @@ function upload(marker:mapCommon.LatLng[],gattClient:ble.GattClientDevice){
         characteristicValue: arrayBuffer,
         descriptors: []
       }
-      gattClient?.writeCharacteristicValue(characteristic, ble.GattWriteType.WRITE);
+      gattClient.writeCharacteristicValue(characteristic, ble.GattWriteType.WRITE);
       count--;
     }
   }
-
   //收到最后一个任务的响应
   let cmd=AppStorage.get('mav_cmd') as number
   console.log('upload cmd2:'+cmd)
@@ -384,13 +388,19 @@ function upload(marker:mapCommon.LatLng[],gattClient:ble.GattClientDevice){
 
 //取消订阅
 function stopBlueToothCharacteristic(gattClient:ble.GattClientDevice){
+  console.log('取消订阅')
   try {
-    gattClient.off('BLEConnectionStateChange',(res)=>{
+    gattClient.off('BLECharacteristicChange',(res)=>{
       console.log(JSON.stringify(res))
     });
   } catch (err) {
     console.error('errCode: ' + (err as BusinessError).code + ', errMessage: ' + (err as BusinessError).message);
   }
+}
+
+function getNavigationFromDevice(gattClient:ble.GattClientDevice){
+  let navigation=AppStorage.get('') as string
+
 }
 
 export{stopBlueToothCharacteristic,unLock,checkPermissionGrant,requestPermissionsFromUser,openPermissionInSystemSettings,WriteBlueToothCharacteristic,upload,sendCommand,GetBlueToothCharacteristic}

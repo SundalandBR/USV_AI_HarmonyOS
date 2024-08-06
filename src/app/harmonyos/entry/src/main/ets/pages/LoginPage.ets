@@ -7,6 +7,7 @@ import { url } from '@kit.ArkTS';
 import { interfaceUser, Json_msg } from '../interfaces/InterfaceUser'
 import { BusinessError } from '@kit.BasicServicesKit'
 import { Users } from '../entity/Users'
+import { setToken } from '../utils/MysqlUtil'
 
 //登录
 @Entry
@@ -14,7 +15,6 @@ import { Users } from '../entity/Users'
 struct LoginPage {
   @State password: string = ''
   @State username: string = ''
-
   getLocation(){
     let context:common.UIAbilityContext=getContext(this) as common.UIAbilityContext
     let permission:Permissions[]=['ohos.permission.APPROXIMATELY_LOCATION','ohos.permission.LOCATION']
@@ -121,6 +121,7 @@ struct LoginPage {
       console.log("obj.Data:"+JSON.stringify(obj.Data))
       if(obj.code==1){
         console.log("登录成功")
+        setToken(obj.msg)
         promptAction.showToast({
           message:"登录成功"
         })

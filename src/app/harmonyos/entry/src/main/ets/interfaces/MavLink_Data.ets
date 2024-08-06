@@ -390,15 +390,15 @@ export function CreateCommandLongT(command:number,confirmation:number,param1: nu
     mav_cmd:76,
     target_system:1,
     target_component:1,
-    command:command,
-    confirmation:confirmation,
-    param1:param1,
-    param2:param2,
-    param3:param3,
-    param4:param4,
-    param5:param5,
-    param6:param6,
-    param7:param7
+    command,
+    confirmation,
+    param1,
+    param2,
+    param3,
+    param4,
+    param5,
+    param6,
+    param7
   }
 }
 

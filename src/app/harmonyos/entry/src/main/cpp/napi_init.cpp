@@ -102,7 +102,7 @@ static napi_value _8HexToJson(napi_env env,napi_callback_info info)
     napi_get_arraybuffer_info(env, args[0], &buffer, &buflen);
     
     MavLink_Pack_t pack=MavLink_Pack_t(new MavLink_Pack((std::uint8_t*)buffer,buflen));
-    free(buffer);
+    //free(buffer);
     
     //解码成json序列化后的字符串
     std::string str=Decode(pack);

@@ -5,11 +5,11 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "storePassword": "000000199CBC55C7DAEE5FA0226EB10835F94B84AAD07BD9BF4644D099E3CA5E6C23BACA99E4D08265",
-          "certpath": "D:/harmonyKey/无人艇.cer",
+          "storePassword": "000000198C2A7835307D659132F62D3544F87D7E6C959608A6FAE6EF22B76EE6D245592992DE86DC71",
+          "certpath": "D:/harmonyKey/wurenting.cer",
           "keyAlias": "wurenting",
-          "keyPassword": "00000019CC50BFE819038F8BAF24DA0F9E4CD527DBADDA83AD0A2C5D58CA2D985B9C1378167AA53307",
-          "profile": "D:/harmonyKey/无人艇Debug.p7b",
+          "keyPassword": "00000019E06FD534964073FEFC4BF24A3AD67259965D8A78D028CC701B788E4BE1CC073AB69D352AC9",
+          "profile": "D:/harmonyKey/wurentingDebug.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "D:/harmonyKey/wurenting.p12"
         }
