@@ -1,12 +1,14 @@
 ## 										USV_AI_HarmonyOS
 
-# 								组长 张 艺 勇
+
 
 ## 亮点功能
 
 - 基于Yolov8-seg的河道障碍检测分割
 - 基于Socket的视频推流服务
 - 基于Mavlink协议的PX4通信
+
+<img src=".\src\resource\readme\result.jpg" alt="result" style="zoom: 50%;" />
 
 ## 项目地址
 
@@ -15,10 +17,13 @@
 ## 使用说明
 
 - 机载电脑端
-  1. 进入该项目的`/bin/release`文件夹
-  2. 根据需求填写`config.ini`配置文件
-  3. 运行`python main.py`
+  - 进入该项目的`/bin/release`文件夹
+  - 根据需求填写`config.ini`配置文件
+  - 运行`python main.py`
+
 - HarmonyOS端
+
+  
 
 ## API
 
