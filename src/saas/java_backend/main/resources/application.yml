@@ -1,0 +1,11 @@
+
+spring:
+  datasource:
+    username: root
+    password: Qwe123456789...++
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.96.237.24:3306/qianduoduo
+  redis:
+    host: 47.96.237.24
+    port: 6379
+    timeout: 2000
