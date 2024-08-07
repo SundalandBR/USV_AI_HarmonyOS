@@ -6,63 +6,6 @@ import time
 import torchvision
 
 
-def iou(box1, box2):
-    def area_box(box):
-        return (box[2] - box[0]) * (box[3] - box[1])
-
-    left = max(box1[0], box2[0])
-    top = max(box1[1], box2[1])
-    right = min(box1[2], box2[2])
-    bottom = min(box1[3], box2[3])
-    cross = max((right - left), 0) * max((bottom - top), 0)
-    union = area_box(box1) + area_box(box2) - cross
-    if cross == 0 or union == 0:
-        return 0
-    return cross / union
-
-
-def NMS(boxes, iou_thres):
-    remove_flags = [False] * len(boxes)
-
-    keep_boxes = []
-    for i, ibox in enumerate(boxes):
-        if remove_flags[i]:
-            continue
-
-        keep_boxes.append(ibox)
-        for j in range(i + 1, len(boxes)):
-            if remove_flags[j]:
-                continue
-
-            jbox = boxes[j]
-            if ibox[5] != jbox[5]:
-                continue
-            if iou(ibox, jbox) > iou_thres:
-                remove_flags[j] = True
-    return keep_boxes
-
-
-def postprocess(pred, conf_thres=0.25, iou_thres=0.45):
-    # 输入是模型推理的结果，即8400个预测框
-    # 1,8400,116 [cx,cy,w,h,class*80,32]
-    boxes = []
-    for item in pred[0]:
-        cx, cy, w, h = item[:4]
-        label = item[4:-32].argmax()
-        confidence = item[4 + label]
-        if confidence < conf_thres:
-            continue
-        left = cx - w * 0.5
-        top = cy - h * 0.5
-        right = cx + w * 0.5
-        bottom = cy + h * 0.5
-        boxes.append([left, top, right, bottom, confidence, label, *item[-32:]])
-
-    boxes = sorted(boxes, key=lambda x: x[4], reverse=True)
-
-    return NMS(boxes, iou_thres)
-
-
 def crop_mask(masks, boxes):
     # masks -> n, 160, 160  原始 masks
     # boxes -> n, 4         检测框，映射到 160x160 尺寸下的
@@ -111,9 +54,7 @@ def hsv2bgr(h, s, v):
     p = v * (1 - s)
     q = v * (1 - f * s)
     t = v * (1 - (1 - f) * s)
-
     r, g, b = 0, 0, 0
-
     if h_i == 0:
         r, g, b = v, t, p
     elif h_i == 1:
@@ -232,69 +173,6 @@ def draw_bbox(bbox, img0, color, wt):
         # img0 = cv2.putText(img0, '{:.4f}'.format(bbox[idx][4]), (int(bbox[idx][0]), int(bbox[idx][1] + 32)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
         # det_result_str += '{} {} {} {} {} {}\n'.format(names[bbox[idx][5]], str(bbox[idx][4]), bbox[idx][0], bbox[idx][1], bbox[idx][2], bbox[idx][3])
     return img0
-
-
-def letterbox(
-    img,
-    new_shape=(640, 640),
-    color=(114, 114, 114),
-    auto=False,
-    scaleFill=False,
-    scaleup=True,
-):
-    # Resize image to a 32-pixel-multiple rectangle https://github.com/ultralytics/yolov3/issues/232
-    shape = img.shape[:2]  # current shape [height, width]
-    if isinstance(new_shape, int):
-        new_shape = (new_shape, new_shape)
-
-    # Scale ratio (new / old)
-    r = min(new_shape[0] / shape[0], new_shape[1] / shape[1])
-    if not scaleup:  # only scale down, do not scale up (for better test mAP)
-        r = min(r, 1.0)
-
-    # Compute padding
-    ratio = r, r  # width, height ratios
-    new_unpad = int(round(shape[1] * r)), int(round(shape[0] * r))
-    dw, dh = new_shape[1] - new_unpad[0], new_shape[0] - new_unpad[1]  # wh padding
-    if auto:  # minimum rectangle
-        dw, dh = np.mod(dw, 64), np.mod(dh, 64)  # wh padding
-    elif scaleFill:  # stretch
-        dw, dh = 0.0, 0.0
-        new_unpad = (new_shape[1], new_shape[0])
-        ratio = new_shape[1] / shape[1], new_shape[0] / shape[0]  # width, height ratios
-
-    dw /= 2  # divide padding into 2 sides
-    dh /= 2
-
-    if shape[::-1] != new_unpad:  # resize
-        img = cv2.resize(img, new_unpad, interpolation=cv2.INTER_LINEAR)
-    top, bottom = int(round(dh - 0.1)), int(round(dh + 0.1))
-    left, right = int(round(dw - 0.1)), int(round(dw + 0.1))
-    img = cv2.copyMakeBorder(
-        img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color
-    )  # add border
-    return img, ratio, (dw, dh)
-
-
-def scale_coords(img1_shape, coords, img0_shape, ratio_pad=None):
-    # Rescale coords (xyxy) from img1_shape to img0_shape
-    if ratio_pad is None:  # calculate from img0_shape
-        gain = min(
-            img1_shape[0] / img0_shape[0], img1_shape[1] / img0_shape[1]
-        )  # gain  = old / new
-        pad = (
-            (img1_shape[1] - img0_shape[1] * gain) / 2,
-            (img1_shape[0] - img0_shape[0] * gain) / 2,
-        )  # wh padding
-    else:
-        gain = ratio_pad[0][0]
-        pad = ratio_pad[1]
-
-    coords[:, [0, 2]] -= pad[0]  # x padding
-    coords[:, [1, 3]] -= pad[1]  # y padding
-    coords[:, :4] /= gain
-    clip_coords(coords, img0_shape)
-    return coords
 
 
 def clip_coords(boxes, shape):
