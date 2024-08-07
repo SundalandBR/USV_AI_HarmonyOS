@@ -1,0 +1,289 @@
+2024-08-07 17:23:47 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:23:47 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:25:14 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:25:15 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:26:25 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:26:25 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:26:46 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:26:46 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:27:43 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:27:44 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:29:15 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:29:15 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:30:04 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:30:04 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:30:04 | INFO | mylogger | main.py:277 | <module> | Process-10 start
+2024-08-07 17:30:04 | ERROR | mylogger | main.py:279 | <module> | Process-11 start error
+2024-08-07 17:30:04 | ERROR | mylogger | main.py:279 | <module> | Process-13 start error
+2024-08-07 17:30:27 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:30:28 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:30:28 | INFO | mylogger | main.py:277 | <module> | Process-10 start
+2024-08-07 17:30:28 | INFO | mylogger | main.py:277 | <module> | Process-11 start
+2024-08-07 17:30:28 | INFO | mylogger | main.py:277 | <module> | Process-12 start
+2024-08-07 17:30:28 | INFO | mylogger | main.py:277 | <module> | Process-13 start
+2024-08-07 17:31:28 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:32:28 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:33:49 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:33:49 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:33:49 | INFO | mylogger | main.py:277 | <module> | Process-10 start
+2024-08-07 17:33:49 | INFO | mylogger | main.py:277 | <module> | Process-11 start
+2024-08-07 17:33:49 | INFO | mylogger | main.py:277 | <module> | Process-12 start
+2024-08-07 17:33:49 | INFO | mylogger | main.py:277 | <module> | Process-13 start
+2024-08-07 17:34:45 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:34:45 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:34:45 | INFO | mylogger | main.py:276 | <module> | Process-10 start
+2024-08-07 17:34:45 | INFO | mylogger | main.py:276 | <module> | Process-11 start
+2024-08-07 17:34:45 | INFO | mylogger | main.py:276 | <module> | Process-12 start
+2024-08-07 17:34:45 | INFO | mylogger | main.py:276 | <module> | Process-13 start
+2024-08-07 17:36:44 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:36:44 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:36:44 | INFO | mylogger | main.py:276 | <module> | Process-10 start
+2024-08-07 17:36:44 | INFO | mylogger | main.py:276 | <module> | Process-11 start
+2024-08-07 17:36:44 | INFO | mylogger | main.py:276 | <module> | Process-12 start
+2024-08-07 17:36:44 | INFO | mylogger | main.py:276 | <module> | Process-13 start
+2024-08-07 17:39:44 | ERROR | mylogger | main.py:279 | <module> | Process-13 start error
+2024-08-07 17:40:44 | ERROR | mylogger | main.py:279 | <module> | Process-13 start error
+2024-08-07 17:41:34 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:41:34 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:41:34 | INFO | mylogger | main.py:276 | <module> | Process-10 start
+2024-08-07 17:41:34 | INFO | mylogger | main.py:276 | <module> | Process-11 start
+2024-08-07 17:41:34 | INFO | mylogger | main.py:276 | <module> | Process-12 start
+2024-08-07 17:41:34 | INFO | mylogger | main.py:276 | <module> | Process-13 start
+2024-08-07 17:42:04 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:42:14 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:42:25 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:42:35 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:42:45 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:42:55 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:43:05 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:43:15 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:43:25 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:43:35 | ERROR | mylogger | main.py:279 | <module> | Process-10 start error
+2024-08-07 17:44:22 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:253 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:266 | <module> | process_list[<Process name='Process-8' pid=38445 parent=38254 started>, <Process name='Process-9' pid=38438 parent=38254 started>, <Process name='Process-10' parent=38254 initial>, <Process name='Process-11' parent=38254 initial>, <Process name='Process-12' parent=38254 initial>, <Process name='Process-13' parent=38254 initial>]
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:268 | <module> | 123True, True
+2024-08-07 17:44:22 | INFO | mylogger | main.py:275 | <module> | Process-10 start
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:276 | <module> | Process-10 start
+2024-08-07 17:44:22 | INFO | mylogger | main.py:275 | <module> | Process-11 start
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:276 | <module> | Process-11 start
+2024-08-07 17:44:22 | INFO | mylogger | main.py:275 | <module> | Process-12 start
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:276 | <module> | Process-12 start
+2024-08-07 17:44:22 | INFO | mylogger | main.py:275 | <module> | Process-13 start
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:276 | <module> | Process-13 start
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:22 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:23 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:23 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:23 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:23 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:23 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:23 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:23 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:44:29 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:29 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:30 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:31 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:32 | DEBUG | mylogger | main.py:268 | <module> | 123True, True
+2024-08-07 17:44:32 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:34 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:34 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:35 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:36 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:38 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:39 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:40 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:41 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:44:42 | DEBUG | mylogger | main.py:105 | Inference_seg | Inference : Inference process exit
+2024-08-07 17:56:22 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | INFO | mylogger | main.py:43 | px4_read | px4 communication connet
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:22 | DEBUG | mylogger | main.py:254 | <module> | _PX4_COMMUNICATION_ENABLE False
+2024-08-07 17:56:51 | INFO | mylogger | main.py:40 | px4_read | px4_read module
+2024-08-07 17:56:54 | ERROR | mylogger | main.py:279 | <module> | Process-9 start error
+2024-08-07 17:56:54 | INFO | mylogger | main.py:276 | <module> | Process-10 start
+2024-08-07 17:56:54 | DEBUG | mylogger | main.py:277 | <module> | Process-10 start
+2024-08-07 17:56:54 | INFO | mylogger | main.py:276 | <module> | Process-11 start
+2024-08-07 17:56:54 | DEBUG | mylogger | main.py:277 | <module> | Process-11 start
+2024-08-07 17:56:54 | INFO | mylogger | main.py:276 | <module> | Process-12 start
+2024-08-07 17:56:54 | DEBUG | mylogger | main.py:277 | <module> | Process-12 start
+2024-08-07 17:56:54 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:54 | INFO | mylogger | main.py:276 | <module> | Process-13 start
+2024-08-07 17:56:54 | DEBUG | mylogger | main.py:277 | <module> | Process-13 start
+2024-08-07 17:56:55 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:55 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:55 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:55 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:55 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:55 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:55 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:55 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:55 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:55 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:56:59 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:00 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:01 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:02 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:03 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:04 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:04 | ERROR | mylogger | main.py:279 | <module> | Process-9 start error
+2024-08-07 17:57:05 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:06 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:07 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:07 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:08 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:09 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:10 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:11 | DEBUG | mylogger | main.py:143 | travel_control | Inference : obstacle!
+2024-08-07 17:57:12 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:13 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:13 | DEBUG | mylogger | main.py:171 | travel_control | Inference : No obstacles and river!!!!!
+2024-08-07 17:57:14 | DEBUG | mylogger | main.py:103 | Inference_seg | Inference : frame_queue is empty!!
+2024-08-07 17:57:14 | DEBUG | mylogger | main.py:143 | travel_control | Inference : obstacle!
+2024-08-07 17:57:15 | DEBUG | mylogger | main.py:105 | Inference_seg | Inference : Inference process exit
