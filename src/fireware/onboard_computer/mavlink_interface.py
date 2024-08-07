@@ -37,7 +37,7 @@ class MAVLinkCommunicator:
             self.error_logger.error(f"Failed to connect to PX4: {e}")
             raise
 
-    def send_messages_to_px4(self, action, direction):
+    def send_move_message_to_px4(self, action, direction):
         if self.mav is not None:
             try:
                 # 目标系统和组件通常对应于 PX4 的自动驾驶仪系统和主控制器
@@ -48,7 +48,7 @@ class MAVLinkCommunicator:
                 if action in (0, 1, 2):  # 0: 悬停, 1: 前进, 2: 后退
                     # 使用 MAV_CMD_DO_CHANGE_SPEED 命令来控制速度
                     # 对于悬停，我们可以设置速度为 0
-                    speed = 0 if action == 0 else 5  # 假设前进或后退速度为 5m/s
+                    speed = 0 if action == 0 else 3  # 假设前进或后退速度为 5m/s
                     self.mav.mav.command_long_send(
                         target_system,
                         target_component,
@@ -81,9 +81,20 @@ class MAVLinkCommunicator:
                         0, 0, 0
                     )
                     logging.info("Direction command (%s) sent to PX4", "LEFT" if direction == 0 else "RIGHT")
-
+                # 发送命令后，等待命令确认
+                command_ack = self.mav.recv_match(type='COMMAND_ACK', blocking=True, timeout=5)
+                if command_ack:
+                    logging.info("Command %s acknowledged by PX4", command_ack.command)
+                else:
+                    logging.warning("Command not acknowledged by PX4")
             except Exception as e:
                 self.error_logger.error(f"Failed to send simple command: {e}")
+
+    def send_mission_message_to_px4(self, seq):
+        # 向PX4发送任务项已到达的信号
+        msg = self.mav.mavlink_message('MISSION_ITEM_REACHED', seq=seq, current=True)    # 表示当前航点已完成
+        self.mav.send(msg)
+
 
     def receive_and_parse_messages_from_px4(self, processor):
         if self.mav is not None:
@@ -92,7 +103,6 @@ class MAVLinkCommunicator:
                     msg = self.mav.recv_match(blocking=True)
                     # print(f"Received message: {msg}")
                     if msg is not None:
-                        # print(f"Received message: {msg}")
                         processor.process_message(msg)
             except Exception as e:
                 self.error_logger.error(f"Error receiving or processing messages: {e}")

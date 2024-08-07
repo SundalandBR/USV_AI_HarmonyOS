@@ -4,6 +4,7 @@ import cv2
 import os
 import time
 import torch
+
 from det_utils import (
     postprocess,
     process_mask,
@@ -12,6 +13,7 @@ from det_utils import (
     scale_image,
     draw_bbox,
     scale_coords,
+    nmx_v2
 )
 
 
@@ -39,13 +41,14 @@ class result:
 
 class model:
     def __init__(
-        self, model_path, width=640, height=640, DEVICE_ID=0, dst_size=(640, 640)
+        self, model_path, width=640, height=640, DEVICE_ID=0, dst_size=(640, 640), seg = True
     ):
         self.model = model_path
         self.width = width
         self.height = height
         self.DEVICE_ID = DEVICE_ID
         self.dst_size = dst_size
+        self.seg = seg
 
     def inference_seg_om(self, img_path=None,img=None):
         # 初始化
@@ -125,15 +128,16 @@ class model:
 
         # 后处理
         start = time.time()
-        output0 = np.array(pred[0]).transpose((0, 2, 1))
+        #output0 = np.array(pred[0]).transpose((0, 2, 1))
+        output0 = pred[0]
         output1 = torch.from_numpy(pred[1][0])
-        pred = postprocess(output0)
-        pred = torch.from_numpy(np.array(pred))
+        #pred = postprocess(output0)
+        pred = nmx_v2(pred=torch.Tensor(output0),conf=0.25,iou=0.5,nm=32)
+        pred = pred[0]
         self.results.speed["postprocess"] = (time.time() - start) * 1000
         
         start = time.time()
         if pred.__len__() != 0:
-            print(type(pred))
             self.pred = pred.clone()
             self.output1 = output1
             self.mask_img0 = self.img.copy()
