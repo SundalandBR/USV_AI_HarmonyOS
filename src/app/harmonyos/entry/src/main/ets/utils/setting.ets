@@ -1,7 +1,7 @@
 
 import preferences from '@ohos.data.preferences'
 import { USER_SETTING, USER_SETTING_AD } from '../constants/setting'
-import { AdvertClass } from './ClassUtil'
+import { AdvertClass } from '../entity/AdvertClass'
 
 // 默认广告选项
 const defaultAd: AdvertClass = {
