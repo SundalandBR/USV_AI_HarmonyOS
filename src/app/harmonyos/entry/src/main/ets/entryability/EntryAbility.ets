@@ -1,6 +1,8 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
+import { UserSettingClass } from '../utils/setting';
+import { AdvertClass } from '../entity/AdvertClass';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -11,10 +13,25 @@ export default class EntryAbility extends UIAbility {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onDestroy');
   }
 
-  onWindowStageCreate(windowStage: window.WindowStage): void {
+  async onWindowStageCreate(windowStage: window.WindowStage): Promise<void> {
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
-
+    const userSetting = new UserSettingClass(this.context)
+    const result = await new Promise<AdvertClass>((resolve, reject) => {
+      setTimeout(() => {
+        resolve({
+          showAd: true,
+          adTime: 5,
+          adImg: $r("app.media.img6")
+        } as AdvertClass)
+      }, 500)
+    })
+    await userSetting.setUserAd(result) // 写入首选项
+    if (result.showAd) {
+      const win = await windowStage.createSubWindow("ad_window")
+      await win.showWindow()
+      win.setUIContent("pages/AdvertPage")
+    }
     windowStage.loadContent('pages/LoginPage', (err) => {
       if (err.code) {
         hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');

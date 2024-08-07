@@ -2,7 +2,7 @@ import { DividerModifier } from '@ohos.arkui.modifier'
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
 import { interfaceUser } from '../interfaces/InterfaceUser'
-import { GetBlueToothCharacteristic, stopBlueToothCharacteristic, unLock } from '../utils/AccessUtil'
+import { GetBlueToothCharacteristic, stopBlueToothCharacteristic, unLock } from '../utils/MavLinkUtil'
 import { ble } from '@kit.ConnectivityKit'
 
 
