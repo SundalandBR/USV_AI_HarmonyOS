@@ -1,7 +1,9 @@
 import cv2
 import torch
+import torchvision
 import numpy as np
 import torch.nn.functional as F
+import time
 
 
 def iou(box1, box2):
@@ -327,3 +329,103 @@ def clip_coords(boxes, shape):
     else:  # np.array (faster grouped)
         boxes[:, [0, 2]] = boxes[:, [0, 2]].clip(0, shape[1])  # x1, x2
         boxes[:, [1, 3]] = boxes[:, [1, 3]].clip(0, shape[0])  # y1, y2
+
+
+
+
+        
+def xywh2xyxy(x):
+    # Convert nx4 boxes from [x, y, w, h] to [x1, y1, x2, y2] where xy1=top-left, xy2=bottom-right
+    y = x.clone() if isinstance(x, torch.Tensor) else np.copy(x)
+    y[:, 0] = x[:, 0] - x[:, 2] / 2  # top left x
+    y[:, 1] = x[:, 1] - x[:, 3] / 2  # top left y
+    y[:, 2] = x[:, 0] + x[:, 2] / 2  # bottom right x
+    y[:, 3] = x[:, 1] + x[:, 3] / 2  # bottom right y
+    return y
+
+def non_max_suppression(
+        pred, #numpy (1,8400,40(32+2+4))
+        conf_thres = 0.25,
+        iou_thres = 0.45,
+        classes = None, #分类
+        agnostic=False,
+        multi_label = False,
+        labels = (),
+        max_det = 300,
+        nm = 0, #seg模型 = 32
+):
+    # 输入是模型推理的结果，即8400个预测框
+    # 1,8400,40 [cx,cy,w,h,class*2,32]
+
+
+    # Checks
+    assert 0 <= conf_thres <= 1, f'Invalid Confidence threshold {conf_thres}, valid values are between 0.0 and 1.0'
+    assert 0 <= iou_thres <= 1, f'Invalid IoU {iou_thres}, valid values are between 0.0 and 1.0'
+    if isinstance(pred, (list, tuple)):  # YOLOv8 model in validation model, output = (inference_out, loss_out)
+        pred = pred[0]  # select only inference output
+
+    device = pred.device
+    mps = 'mps' in device.type  # Apple MPS
+    if mps:  # MPS not fully supported yet, convert tensors to CPU before NMS
+        pred = pred.cpu()
+    bs = pred.shape[0]  # batch size
+    nc = pred.shape[1] - nm - 4  # number of classes
+    mi = 4 + nc  # mask start index
+    xc = pred[:, 4:mi].amax(1) > conf_thres  # candidates
+
+    # Settings
+    max_wh = 7680  # (pixels) maximum box width and height
+    max_nms = 30000  # maximum number of boxes into torchvision.ops.nms()
+    time_limit = 0.5 + 0.05 * bs  # seconds to quit after
+    multi_label &= nc > 1  # multiple labels per box (adds 0.5ms/img) 是否为多标签
+
+    t = time.time()
+
+    output = [torch.zeros((0, 6 + nm), device=pred.device)] * bs
+    for xi , x in enumerate(pred):
+        x = x.transpose(0,-1)[xc[xi]] # 获取符合置信度的框 x = (n,32) 
+
+        #无框
+        if not x.shape[0]:
+            continue
+
+        # Box/Mask
+        box, cls, mask = x.split((4, nc, nm), 1)
+        box = xywh2xyxy(box)  # center_x, center_y, width, height) to (x1, y1, x2, y2)
+        if multi_label:
+            i, j = (cls > conf_thres).nonzero(as_tuple=False).T
+            x = torch.cat((box[i], x[i, 4 + j, None], j[:, None].float(), mask[i]), 1)
+        else:  # best class only
+            conf, j = cls.max(1, keepdim=True)
+            x = torch.cat((box, conf, j.float(), mask), 1)[conf.view(-1) > conf_thres]
+
+        # Filter by class
+        if classes is not None:
+            x = x[(x[:, 5:6] == torch.tensor(classes, device=x.device)).any(1)]
+
+        # Apply finite constraint
+        # if not torch.isfinite(x).all():
+        #     x = x[torch.isfinite(x).all(1)]
+
+        # Check shape
+        n = x.shape[0]  # number of boxes
+        if not n:  # no boxes
+            continue
+        x = x[x[:, 4].argsort(descending=True)[:max_nms]]  # sort by confidence and remove excess boxes
+
+        # Batched NMS
+        c = x[:, 5:6] * (0 if agnostic else max_wh)  # classes
+        boxes, scores = x[:, :4] + c, x[:, 4]  # boxes (offset by class), scores
+        i = torchvision.ops.nms(boxes, scores, iou_thres)  # NMS
+        i = i[:max_det]  # limit detections
+
+        output[xi] = x[i]
+        if mps:
+            output[xi] = output[xi].to(device)
+
+        
+    return output
+
+
+def nmx_v2(pred, conf=0.4, iou=0.5, nm=0):
+    return non_max_suppression(pred, conf_thres=conf, iou_thres=iou, nm=nm)

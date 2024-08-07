@@ -6,7 +6,7 @@ import os
 import time
 from letter_box import letterbox,letterbox_yolo,scale_image,scale_coords,draw_bbox
 import torch
-from det_seg import postprocess,process_mask,random_color
+from det_seg import postprocess,process_mask,random_color,nmx_v2
 
 
 class result:
@@ -123,13 +123,26 @@ class model:
         pred = sess.run(None, {input_name: img.astype(np.float32)})
         self.results.speed['inference'] = (time.time() - start) * 100
         
-        #后处理
+
         start = time.time()
-        output0 = np.array(pred[0]).transpose((0,2,1))
+        #output0 = np.array(pred[0]).transpose((0, 2, 1))
+        output0 = pred[0]
         output1 = torch.from_numpy(pred[1][0])
-        print(output1.shape)
-        pred = postprocess(output0)
-        pred = torch.from_numpy(np.array(pred))
+        #pred = postprocess(output0)
+        pred = nmx_v2(pred=torch.Tensor(output0),nm=32)
+        pred = pred[0]
+        print(pred.shape)
+        self.results.speed["postprocess"] = (time.time() - start) * 1000
+
+
+        #后处理
+        # start = time.time()
+        # output0 = np.array(pred[0]).transpose((0,2,1))
+        # output1 = torch.from_numpy(pred[1][0])
+        # print(output1.shape)
+        # pred = postprocess(output0)
+        # pred = torch.from_numpy(np.array(pred))
+
         masks = process_mask(output1, pred[:, 6:], pred[:, :4], dst_size, True)
         masks = scale_image(im1_shape=img_.shape,masks=masks,im0_shape=self.img.shape)
         masks = masks.transpose((2,0,1)).astype(np.uint8)
@@ -137,7 +150,6 @@ class model:
             label = int(pred[i][5])
             color = np.array(random_color(label))
             colored_mask = (np.ones((self.img.shape[0],self.img.shape[1],3))*color).astype(np.uint8)
-            print(colored_mask)
             masked_colored_mask = cv2.bitwise_and(colored_mask,colored_mask,mask=mask)
             mask_indices = mask == 1
             self.img[mask_indices] = (self.img[mask_indices]*0.6 + masked_colored_mask[mask_indices]*0.4).astype(np.uint8)

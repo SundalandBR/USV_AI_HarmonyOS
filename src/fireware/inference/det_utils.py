@@ -224,3 +224,95 @@ def draw_bbox(bbox, img0, color, wt, names):
         img0 = cv2.putText(img0, '{:.4f}'.format(bbox[idx][4]), (int(bbox[idx][0]), int(bbox[idx][1] + 32)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
         det_result_str += '{} {} {} {} {} {}\n'.format(names[bbox[idx][5]], str(bbox[idx][4]), bbox[idx][0], bbox[idx][1], bbox[idx][2], bbox[idx][3])
     return img0
+
+def xywh2xyxy(x):
+    # Convert nx4 boxes from [x, y, w, h] to [x1, y1, x2, y2] where xy1=top-left, xy2=bottom-right
+    y = x.clone() if isinstance(x, torch.Tensor) else np.copy(x)
+    y[:, 0] = x[:, 0] - x[:, 2] / 2  # top left x
+    y[:, 1] = x[:, 1] - x[:, 3] / 2  # top left y
+    y[:, 2] = x[:, 0] + x[:, 2] / 2  # bottom right x
+    y[:, 3] = x[:, 1] + x[:, 3] / 2  # bottom right y
+    return y
+
+def non_max_suppression(
+        pred, #numpy (1,8400,40(32+2+4))
+        conf_thres = 0.25,
+        iou_thres = 0.45,
+        classes = None, #分类
+        agnostic=False,
+        multi_label = False,
+        max_det = 300,
+        nm = 0, #seg模型 = 32
+):
+    # 输入是模型推理的结果，即8400个预测框
+    # 1,8400,40 [cx,cy,w,h,class*2,32]
+
+
+    # Checks
+    assert 0 <= conf_thres <= 1, f'Invalid Confidence threshold {conf_thres}, valid values are between 0.0 and 1.0'
+    assert 0 <= iou_thres <= 1, f'Invalid IoU {iou_thres}, valid values are between 0.0 and 1.0'
+
+    bs = pred.shape[0]  # batch size # bs = 1
+    nc = pred.shape[1] - nm - 4  # number of classes
+    mi = 4 + nc
+    xc = pred[:,4:mi].amx(1) > conf_thres  # candidates
+
+    # Settings
+    max_wh = 7680  # (pixels) maximum box width and height
+    max_nms = 30000  # maximum number of boxes into torchvision.ops.nms()
+    time_limit = 0.5 + 0.05 * bs  # seconds to quit after
+    multi_label &= nc > 1  # multiple labels per box (adds 0.5ms/img) 是否为多标签
+
+    t = time.time()
+    mi = 5 + nc
+    try:
+        output = [torch.zeros((0 ,6 + nm),device=pred.device)] * bs
+    except:
+        output = [torch.zeros((0 ,6 + nm),device='cpu')] * bs
+
+    for xi , x in enumerate(pred):
+        x = x.transpose(0,-1)[xc[xi]] # 获取符合置信度的框 x = (n,32) 
+        
+        #无框
+        if not x.shape[0]:
+            continue
+        
+        # label,mask * conf
+        x[:,5:] *= x[:,4:5]
+
+        # Box/Mask
+        box,cls,mask  = x.split((4,nc,nm),1)
+        box = xywh2xyxy(x[:,:4]) # center_x,center_y w h to x1 y1 x2 y2
+        
+        if multi_label:
+            i,j = (cls>conf_thres).nonzero(as_tuple=False).T
+            x = torch.cat((box[i],x[i,4+j,None],j[:,None].float(),mask[i]))
+        else:
+            conf , j = x[:,5:mi].max(1,keepdim = True)
+            x = torch.cat((box,conf,j.float(),mask),1)[conf.view(-1)>conf_thres]
+
+        #单标签
+
+        #Check shape
+        n = x.shape[0]
+        if not n:
+            continue
+
+        x = x[x[:,4].argsort(descending=True)[:max_nms]]
+
+
+        c = x[:,5:6] * (0 if agnostic else max_wh)
+        boxes , scores = x[:,:4] + c , x[:,4]
+        #nms
+        i = torchvision.ops.nms(boxes,scores,iou_thres)
+        i = i[:max_det]
+
+        output[xi] = x[i]
+        # if mps:
+        #     output[xi] = output[xi].to(device)
+        #
+        
+    return output
+        
+def nmx_v2(pred,conf=0.4,iou=0.5,nm = 0):
+    return non_max_suppression(pred,conf_thres=conf,iou_thres=iou,nm=nm)

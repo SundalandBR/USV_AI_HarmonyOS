@@ -16,7 +16,7 @@ def capture_camera():
 
 
 # 与推理模块交互部分与视频保存
-def capture_video(frame_queue, enable, frame_queue_event):
+def capture_video(frame_queue, enable):
     cap = capture_camera()
     # 参数
     running_time = 60   # 程序运行时间
@@ -78,7 +78,6 @@ def capture_video(frame_queue, enable, frame_queue_event):
                 # 将打包好的图片列表放入缓冲区
                 if (current_time - list_start_time) / cv2.getTickFrequency() >= 1:
                     frame_queue.put(copy.deepcopy(image_list))
-                    frame_queue_event.set()
                     # print(f"capture:{list_count}")
                     list_count += 1
                     image_list.clear()
@@ -130,7 +129,6 @@ def video_upload(HOST, PORT):
             if not ret:
                 print("无法接收帧，请退出")
                 break
-
             quality = 80
             while True:
                 _, img_encoded = cv2.imencode('.jpg', img1, [int(cv2.IMWRITE_JPEG_QUALITY),quality])
