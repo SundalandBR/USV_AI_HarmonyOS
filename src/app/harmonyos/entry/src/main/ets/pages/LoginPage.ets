@@ -7,6 +7,7 @@ import { url } from '@kit.ArkTS';
 import { interfaceUser, Json_msg } from '../interfaces/InterfaceUser'
 import { BusinessError } from '@kit.BasicServicesKit'
 import { Users } from '../entity/Users'
+import { setToken } from '../utils/MysqlUtil'
 
 //登录
 @Entry
@@ -14,7 +15,6 @@ import { Users } from '../entity/Users'
 struct LoginPage {
   @State password: string = ''
   @State username: string = ''
-
   getLocation(){
     let context:common.UIAbilityContext=getContext(this) as common.UIAbilityContext
     let permission:Permissions[]=['ohos.permission.APPROXIMATELY_LOCATION','ohos.permission.LOCATION']
@@ -110,6 +110,7 @@ struct LoginPage {
   login(){
     let session = rcp.createSession();
     let _url = url.URL.parseURL(`http://47.96.237.24:8080/poi/login?username=${this.username}&password=${this.password}`);
+    console.log( _url.toString() )
 
     session.post(_url).then((response) => {
       //response为rcp.Response对象,服务器返回的内容
@@ -120,6 +121,7 @@ struct LoginPage {
       console.log("obj.Data:"+JSON.stringify(obj.Data))
       if(obj.code==1){
         console.log("登录成功")
+        setToken(obj.msg)
         promptAction.showToast({
           message:"登录成功"
         })

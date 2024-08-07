@@ -1,5 +1,6 @@
 import { router } from '@kit.ArkUI'
 import { interfaceUser } from '../interfaces/InterfaceUser'
+import { LoginOut } from '../utils/MysqlUtil';
 
 @Entry
 @Component
@@ -114,6 +115,9 @@ struct UserPage {
             .backgroundColor(Color.Red)
             .width(200)
             .onClick(()=>{
+              LoginOut((res:boolean)=>{
+                console.log(res?"登出成功":"登出失败")
+              })
               router.replaceUrl({
                 url:'pages/LoginPage'
               })
@@ -127,3 +131,4 @@ struct UserPage {
     .padding({left:20,right:20})
   }
 }
+

@@ -13,7 +13,7 @@ struct SignupPage {
   @State private phone_number:string='';
 
 
-  Sigup(){
+  Signup(){
     let session = rcp.createSession();
     let _url = url.URL.parseURL(`http://47.96.237.24:8080/poi/sign?Acc=${this.Acc_sign}&psw=${this.password}&username=${this.username}&phone=${this.phone_number}`);
     session.post(_url).then((response) => {
@@ -156,7 +156,7 @@ struct SignupPage {
         .type(ButtonType.Normal)
         .margin(50)
         .onClick(() => {
-          this.Sigup()
+          this.Signup()
         })
 
 

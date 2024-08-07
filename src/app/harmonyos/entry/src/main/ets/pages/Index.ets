@@ -2,11 +2,20 @@ import { DividerModifier } from '@ohos.arkui.modifier'
 import { router, window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
 import { interfaceUser } from '../interfaces/InterfaceUser'
+import { GetBlueToothCharacteristic, stopBlueToothCharacteristic, unLock } from '../utils/AccessUtil'
+import { ble } from '@kit.ConnectivityKit'
 
+
+
+
+//let device_1:ble.GattClientDevice|null=null;
 @Entry
 @Component
 struct Index {
   private flag=false
+  private subscribeFlag=false
+  //@StorageProp('gattClient') device:ble.GattClientDevice=AppStorage.get("gattClient") as ble.GattClientDevice
+ // private client:ble.GattClientDevice | null = null;
 
   @State user1:interfaceUser= {
     userId: 0,
@@ -18,6 +27,7 @@ struct Index {
   };
 
   aboutToAppear(): void {
+
     try {
       this.user1=router.getParams() as interfaceUser
     }catch (e){
@@ -135,16 +145,26 @@ struct Index {
           }
           Row(){
             Toggle({type:ToggleType.Switch,isOn:false})
-              .onChange(()=>{
-                if(this.flag){
-                  this.flag=false
+              .onChange((isOn)=>{
+                let device:ble.GattClientDevice=AppStorage.get("gattClient") as ble.GattClientDevice
+                console.log("开关开关开关开关开关开关开关开关开关")
+                console.log('test:'+  device.getDeviceName())
+                if(isOn){
+                  unLock(device,1)
                 }
                 else{
-                  this.flag=true
+                  unLock(device,0)
                 }
+                this.flag=!this.flag
               })
           }
           .margin({right:10})
+          //GetBlueToothCharacteristic(AppStorage.get('gattClient') as ble.GattClientDevice)
+          Button('订阅事件')
+            .onClick(()=>{
+              !this.subscribeFlag?GetBlueToothCharacteristic(AppStorage.get('gattClient') as ble.GattClientDevice):stopBlueToothCharacteristic(AppStorage.get('gattClient') as ble.GattClientDevice)
+              this.subscribeFlag=!this.subscribeFlag
+            })
         }
         .margin({top:10})
         .width('100%')
@@ -160,6 +180,7 @@ struct Index {
       }
       .alignItems(HorizontalAlign.Start)
       .margin({top:90})
+
     }
     .padding({left:15,right:15})
     .showSideBar(false)

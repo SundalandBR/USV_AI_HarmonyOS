@@ -5,6 +5,8 @@ import { access, ble } from '@kit.ConnectivityKit'
 import { connection } from '@kit.ConnectivityKit';
 import { BusinessError } from '@kit.BasicServicesKit'
 import { hilog } from '@kit.PerformanceAnalysisKit'
+import { GetBlueToothCharacteristic } from '../utils/AccessUtil'
+import { BluetoothDevice } from '../entity/BluetoothDevice'
 
 @Entry
 @Component
@@ -12,9 +14,10 @@ struct BlueToothPage {
 
   @State Bluestatus:boolean=false
   @State gattClient: ble.GattClientDevice| null = null;
-  @State bluetoothname:string[]=[]
+
   @State matchedbt:string[]=[]
-  @State BTMAC:string[]=[]
+  @State bluetoothDevice:BluetoothDevice[] = []
+
   PaiBT:string[]=[]
   locationName:string=''
   flag:boolean=false
@@ -87,28 +90,25 @@ struct BlueToothPage {
     try {
       data.forEach((val:string)=>{
         console.log('蓝牙MAC地址是：'+val)
-        this.BTMAC.push(val)
-        //this.bluetoothname.push(val)
-        //console.log(`${this.bluetoothname}`)
-        //console.info(`${this.BTMAC}`)
-
         btName=connection.getRemoteDeviceName(val)
-        console.log('蓝牙名字为：'+btName)
-        this.bluetoothname.push(btName)
-
+        console.log('蓝牙名称：'+btName + ",蓝牙地址：" + val)
+        if(btName!=''){
+          this.bluetoothDevice.push({
+            mac:val,
+            deviceName:btName
+          })
+        }
       })
     }catch (err){
-      console.log(JSON.stringify(err)+`${this.bluetoothname}`)
+
     }
 
   }
 
-  //发起蓝牙配
-  InitiateTeam(sequence:number){
-    console.log('发起蓝牙配对:'+sequence)
-    let BTmac:string=this.BTMAC[sequence]
+  //发起蓝牙配对
+  InitiateTeam(device:BluetoothDevice){
     try {
-      connection.pairDevice(BTmac,(err:BusinessError)=>{
+      connection.pairDevice(device.mac,(err:BusinessError)=>{
         console.info('pairDevice, device name err:' + JSON.stringify(err))
         if (err) {
           promptAction.showToast({
@@ -127,27 +127,34 @@ struct BlueToothPage {
 
 
   //连接蓝牙
-  connectionBT(sequence:number){
+  connectionBT(device:BluetoothDevice){
     console.log('连接蓝牙')
+
     //60:56:86:6A:42:F1
     try {
       this.gattClient?.close();
-      let deviceName=this.BTMAC[sequence]
+
+      console.log('待连接的Mac:'+device.mac)
+
       //创建
       // hilog.debug(0,"deviceName",this.deviceName)
-      if (deviceName != "") {
-        this.gattClient = ble.createGattClientDevice(deviceName);
+
+        this.gattClient = ble.createGattClientDevice(device.mac);
         //发起连接请求
         this.gattClient.connect();
         promptAction.showToast({
           message:"连接成功"
         })
-        setTimeout(()=>{
-          this.gattClient?.on("BLEConnectionStateChange",(res:ble.BLEConnectionChangeState)=>{
+        AppStorage.setOrCreate("gattClient",this.gattClient)
+        //GetBlueToothCharacteristic(this.gattClient)
+        console.log(device.deviceName)
+        console.log(`${AppStorage.get("gattClient")}`)
+
+          this.gattClient.on("BLEConnectionStateChange",(res:ble.BLEConnectionChangeState)=>{
+            console.log('连接到的设备是：'+connection.getRemoteDeviceName(res.deviceId));
             hilog.debug(0,"bleStatus",JSON.stringify(res))
           })
-        },100)
-      }
+
     }catch (err){
       console.log(JSON.stringify(err))
     }
@@ -156,7 +163,6 @@ struct BlueToothPage {
 
   //获取已配对列表
   PairingBT(){
-
     try {
       console.log('获取已配对列表')
       let pairName:string=''
@@ -167,7 +173,6 @@ struct BlueToothPage {
         console.log('已配对蓝牙的名字：'+pairName)
         this.matchedbt.push(pairName)
       })
-
     }catch (err){
       console.error('errCode: ' + (err as BusinessError).code + ', errMessage: ' + (err as BusinessError).message)
     }
@@ -204,6 +209,7 @@ struct BlueToothPage {
             .onChange((isOn)=>{
               console.log(''+isOn)
               if(isOn){
+                // this.connectionBT(2)
                 this.onBluetooth()
               }else{
                 this.offBluetooth()
@@ -247,10 +253,10 @@ struct BlueToothPage {
       //已配对设备
       Column(){
         List(){
-          ForEach(this.matchedbt,(val:string,id:number)=>{
+          ForEach(this.bluetoothDevice,(device:BluetoothDevice)=>{
             ListItem(){
               Row(){
-                Text(val)
+                Text(device.deviceName)
                   .fontSize(20)
                   .margin({top:10,bottom:10,left:10})
               }
@@ -258,13 +264,12 @@ struct BlueToothPage {
               .borderRadius(10)
               .width('90%')
               .margin({top:10,bottom:10,left:15,right:10})
-              .onClick(()=>this.connectionBT(id))
+              .onClick(()=>this.connectionBT(device))
             }
           })
         }
       }
       .height('35%')
-
 
       //可用设备以及他们的名字
       Column(){
@@ -311,10 +316,10 @@ struct BlueToothPage {
         .margin({top:20})
         Row(){
           List(){
-            ForEach(this.bluetoothname,(val:string,id:number)=>{
+            ForEach(this.bluetoothDevice,(val:BluetoothDevice)=>{
               ListItem(){
                 Row(){
-                  Text(val)
+                  Text(val.deviceName)
                     .fontSize(20)
                     .margin({top:10,bottom:10,left:10})
                 }
@@ -322,7 +327,7 @@ struct BlueToothPage {
                 .borderRadius(10)
                 .width('90%')
                 .margin({top:10,bottom:10,left:15,right:10})
-                .onClick(()=>this.InitiateTeam(id))
+                .onClick(()=>this.InitiateTeam(val))
               }
             })
           }
