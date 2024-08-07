@@ -11,7 +11,7 @@ models = model.model("..\\..\\..\\resource\\onnx\\train15_best.onnx",
 results = models.inference()
 ```
 
-`results`对象参数
+`results`
 
 | 参数         | 类型            | 说明                                                       |
 | ------------ | --------------- | ---------------------------------------------------------- |
@@ -22,33 +22,31 @@ results = models.inference()
 | `rect`       | `list`          | 缩放标注框坐标(最小x坐标，最小y坐标，最大x坐标，最大y坐标) |
 | `probs`      | `list`          | 置信框坐标、置信框、识别的类别                             |
 
-
-
 ### 后处理API
 
-/recognization/nms.py
+`det_utils.py`
 
 ```python
-def post_processing(onnx_model,img_path,height=640, width=640) --> ret_img, rect
+from det_utils import mnx_v2
+def nmx_v2(pred, conf=0.4, iou=0.5, nm=0): --> output
+    return non_max_suppression(pred, conf_thres=conf, iou_thres=iou, nm=nm)
 ```
 
 @param
 
-- onnx_model：onnx模型文件
-- img_path:文件路径
-- height：缩放高度
-- width：缩放长度
+- pred：推理结果
+- conf: 直线度
+- iou：交并比
+- nm：掩码个数
 
 @output
 
-- ret_img：标注后的图片
-- rect：缩放标注框坐标(最小x坐标，最小y坐标，最大x坐标，最大y坐标)
+- output：结果向量
 
 eg.
 
 ```python
-ret_img, rect = post_processing('../../resource/model/onnx/yolov8n.onnx',
-                                "D://Module_dataset//coco8//images//val//000000000036.jpg")
+pred = nmx_v2(pred=torch.Tensor(output0), conf=0.25, iou=0.5, nm=32)
 ```
 
 
