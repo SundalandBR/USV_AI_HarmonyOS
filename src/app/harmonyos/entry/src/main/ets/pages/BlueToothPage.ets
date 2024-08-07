@@ -5,13 +5,12 @@ import { access, ble } from '@kit.ConnectivityKit'
 import { connection } from '@kit.ConnectivityKit';
 import { BusinessError } from '@kit.BasicServicesKit'
 import { hilog } from '@kit.PerformanceAnalysisKit'
-import { GetBlueToothCharacteristic } from '../utils/AccessUtil'
+import { GetBlueToothCharacteristic } from '../utils/MavLinkUtil'
 import { BluetoothDevice } from '../entity/BluetoothDevice'
 
 @Entry
 @Component
 struct BlueToothPage {
-
   @State Bluestatus:boolean=false
   @State gattClient: ble.GattClientDevice| null = null;
 

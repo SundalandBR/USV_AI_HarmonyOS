@@ -14,7 +14,7 @@ import { GetResponseForNavigation, Mission, Navigation, Point, TABLE_, TAdd, TEd
   WaterData } from '../utils/MysqlUtil';
 import { webview } from '@kit.ArkWeb';
 import systemDateTime from '@ohos.systemDateTime';
-import { upload, WriteBlueToothCharacteristic } from '../utils/AccessUtil';
+import { upload, WriteBlueToothCharacteristic } from '../utils/MavLinkUtil';
 import { ble } from '@kit.ConnectivityKit';
 
 @Entry
@@ -54,7 +54,7 @@ struct OptionPage {
     speed: 0,
     course: 0,
     status: 0,
-    batteryLevel: 0
+    batteryLevel: 99
   }
 
   @State user2:interfaceUser= {
@@ -422,7 +422,7 @@ struct OptionPage {
   sendTask(){
     upload(this.pointArr2,AppStorage.get("gattClient") as ble.GattClientDevice)
     //发送start命令
-    WriteBlueToothCharacteristic(300,0,0,this.pointArr.length,0,0,0,0,0,AppStorage.get("gattClient") as ble.GattClientDevice)
+    //WriteBlueToothCharacteristic(300,0,0,this.pointArr.length,0,0,0,0,0,AppStorage.get("gattClient") as ble.GattClientDevice)
   }
 
   //获取无人艇状态信息
@@ -472,13 +472,13 @@ struct OptionPage {
               this.taskFlag=!this.taskFlag
               this.getTaskList()
             })
-          Button('手动')
+          Button('开始')
             .margin({ left:50 ,bottom:20})
             .type(ButtonType.Normal)
             .backgroundColor('rgb(225,255,255)')
             .fontColor(Color.Black)
             .onClick(()=>{
-
+              WriteBlueToothCharacteristic(300,0,0,this.pointArr.length,0,0,0,0,0,AppStorage.get("gattClient") as ble.GattClientDevice)
             })
           Button('悬停')
             .margin({ left:50 ,bottom:20})
