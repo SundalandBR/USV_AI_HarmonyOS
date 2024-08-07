@@ -27,5 +27,5 @@
 
 ## API
 
-- [python接口](../doc/机载电脑与PX4API.md)
+- [python接口](./doc/机载电脑与PX4API.md)
 
