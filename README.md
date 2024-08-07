@@ -1,6 +1,6 @@
-## 					USV_AI_HarmonyOS
+## 										USV_AI_HarmonyOS
 
-# 				组长 张 义 勇
+# 								组长 张 艺 勇
 
 ## 亮点功能
 
